@@ -1,11 +1,16 @@
-#include <cstdio>
+#include <iostream>
 #include "../include/glad/glad.h"
 #include <GLFW/glfw3.h>
 
+void foo(int a, int b)
+{
+
+	return;
+}
+
 int main() 
 {
-	printf("Compiles!\n");
-	
+	foo(4, 5);
 	glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

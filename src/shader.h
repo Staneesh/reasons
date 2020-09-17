@@ -2,6 +2,7 @@
 #define SHADER_H
 
 #include "../include/glad/glad.h"
+#include "utils.h"
 #include <string>
 #include <fstream>
 
@@ -9,7 +10,7 @@ class Shader
 {
 	unsigned id;
 public:
-	Shader(const char* vertex_path, const char* fragment_path);
+	Shader(const char* vertex_path, const char* fragment_path, Utils::Report& r);
 
 	void use();
 

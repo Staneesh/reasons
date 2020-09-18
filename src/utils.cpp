@@ -3,7 +3,15 @@
 const Utils::Report Utils::load_entire_file(const char* path, unsigned char** where)
 {
 	FILE* file = fopen(path, "r");
-    
+
+    if (file == 0)
+    {
+        auto r = Utils::Report(Utils::Report::Type::ERROR, 
+        "Unable to open file: "+(std::string(path)));
+        
+        return r;
+    }
+
     fseek(file, 0, SEEK_END);
     unsigned fileSize = ftell(file);
     fseek(file, 0, SEEK_SET);
@@ -12,7 +20,7 @@ const Utils::Report Utils::load_entire_file(const char* path, unsigned char** wh
     memset(*where, 0, fileSize + 1);
     
     if (fread(*where, fileSize, 1, file) != 1) {
-        return Utils::Report("Failed reading file!");
+        return Utils::Report(Utils::Report::Type::ERROR, "Failed reading file!");
     }
     
     fclose(file);
@@ -30,8 +38,23 @@ std::string Utils::Report::disambiguate_message_type(const Type& t)
     return std::string();
 }
 
-Utils::Report Utils::Report::append(const Type& message_type, const std::string& add_to_report)
+void Utils::Report::append(const Type& message_type, const std::string& add_to_report)
 {
     std::string disambiguated_message_type = disambiguate_message_type(message_type);
-    return Utils::Report(message + add_to_report);
+    message += disambiguated_message_type + add_to_report + "\n";
+}
+
+void Utils::Report::append(const Report& r)
+{
+    message += r.message;
+}
+
+void Utils::Report::log()
+{
+    std::cout<<message<<std::endl;
+}
+
+void Utils::log_here()
+{
+    std::cout<<"HERE!"<<std::endl;
 }

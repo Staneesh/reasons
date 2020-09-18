@@ -11,7 +11,8 @@ class Shader
 	unsigned id;
 public:
 	Shader(const char* vertex_path, const char* fragment_path, Utils::Report& r);
-
+	~Shader();
+	
 	void use();
 
 	unsigned get_id();

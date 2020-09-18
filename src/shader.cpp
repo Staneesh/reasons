@@ -10,6 +10,11 @@ void Shader::use()
 	glUseProgram(id);
 }
 
+Shader::~Shader()
+{
+    
+}
+
 Shader::Shader(const char* vertex_path, const char* fragment_path, Utils::Report& r)
 {
     r = Utils::Report();
@@ -20,9 +25,13 @@ Shader::Shader(const char* vertex_path, const char* fragment_path, Utils::Report
     
     unsigned char* vsCode;
     unsigned char* fsCode;
+
+
     auto vert_read_err = Utils::load_entire_file(vertex_path, &vsCode);
 	auto frag_read_err = Utils::load_entire_file(fragment_path, &fsCode);
 
+    r.append(vert_read_err);
+    r.append(frag_read_err);
     
     vertex = glCreateShader(GL_VERTEX_SHADER);
     fragment = glCreateShader(GL_FRAGMENT_SHADER);

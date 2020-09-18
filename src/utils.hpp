@@ -15,40 +15,18 @@ public:
 	public:
 		enum class Type
 		{
-			NONE,
+			NONE, //TODO(stanisz): is it used?
 			ERROR,
 			//NOTE(stanisz): more?
 		};
+		
+		Report();
+		Report(const Type& t, const std::string& m);
+		Report(const Type& t, char* m);
+		Report(const Report& r);
 
-		Report(const Type& t, const std::string& m)
-		{
-			append(t, m);
-		}
-		Report(const Type& t, char* m)
-		{
-			append(t, m);
-		}
-		Report()
-		{
-			message = "";
-		}
-		Report(const Report& r)
-		{
-			append(r);
-		}
-
-		const bool is_bad() const
-		{
-			if (message == "")
-			{
-				return 0;
-			}
-			return 1;
-		}	
-		const bool is_good() const
-		{
-			return !is_bad();
-		}
+		const bool is_bad() const;
+		const bool is_good() const;
 
 		void append(const Type& message_type, const std::string& add_to_report);
 		void append(const Report& r);

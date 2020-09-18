@@ -66,3 +66,37 @@ void Utils::log_here()
 {
     std::cout<<"HERE!"<<std::endl;
 }
+
+Utils::Report::Report(const Type& t, const std::string& m)
+{
+    append(t, m);
+}
+
+Utils::Report::Report(const Type& t, char* m)
+{
+    append(t, m);
+}
+
+Utils::Report::Report()
+{
+    message = "";
+}
+
+Utils::Report::Report(const Report& r)
+{
+    append(r);
+}
+
+const bool Utils::Report::is_bad() const
+{
+    if (message == "")
+    {
+        return 0;
+    }
+    return 1;
+}	
+
+const bool Utils::Report::is_good() const
+{
+    return !is_bad();
+}

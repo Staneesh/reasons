@@ -2,7 +2,7 @@
 #define SHADER_H
 
 #include "../include/glad/glad.h"
-#include "utils.h"
+#include "utils.hpp"
 #include <string>
 #include <fstream>
 

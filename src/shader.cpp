@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "shader.hpp"
 
 unsigned Shader::get_id()
 {

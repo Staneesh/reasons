@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "utils.hpp"
 
 const Utils::Report Utils::load_entire_file(const char* path, unsigned char** where)
 {

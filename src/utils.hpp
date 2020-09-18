@@ -15,11 +15,10 @@ public:
 	public:
 		enum class Type
 		{
-			NONE, //TODO(stanisz): is it used?
 			ERROR,
 			//NOTE(stanisz): more?
 		};
-		
+
 		Report();
 		Report(const Type& t, const std::string& m);
 		Report(const Type& t, char* m);

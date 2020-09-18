@@ -54,6 +54,7 @@ public:
 		void append(const Report& r);
 
 		void log();
+		void log_if_bad();
 
 	private:
 		std::string message;

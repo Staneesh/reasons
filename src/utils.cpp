@@ -54,6 +54,14 @@ void Utils::Report::log()
     std::cout<<message<<std::endl;
 }
 
+void Utils::Report::log_if_bad()
+{
+    if (is_bad())
+    {
+        log();
+    }
+}
+
 void Utils::log_here()
 {
     std::cout<<"HERE!"<<std::endl;

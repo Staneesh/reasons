@@ -46,7 +46,7 @@ int main()
 
     Utils::Report shader_report;
     Shader basic("src/shaders/triangle.vs", "src/shaders/triangle.fs", shader_report);
-    shader_report.log();
+    shader_report.log_if_bad();
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------

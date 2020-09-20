@@ -23,6 +23,7 @@ public:
 		Report(const Type& t, const std::string& m);
 		Report(const Type& t, char* m);
 		Report(const Report& r);
+		~Report();
 
 		const bool is_bad() const;
 		const bool is_good() const;

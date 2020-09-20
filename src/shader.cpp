@@ -27,10 +27,20 @@ Shader::Shader(const char* vertex_path, const char* fragment_path, Utils::Report
     unsigned char* fsCode;
 
     auto vert_read_err = Utils::load_entire_file(vertex_path, &vsCode);
-	auto frag_read_err = Utils::load_entire_file(fragment_path, &fsCode);
-
     r.append(vert_read_err);
+    if (r.is_bad())
+    {
+        return;
+    }
+
+	auto frag_read_err = Utils::load_entire_file(fragment_path, &fsCode);
     r.append(frag_read_err);
+
+    if(r.is_bad())
+    {
+        free(vsCode);
+        return;
+    }
     
     vertex = glCreateShader(GL_VERTEX_SHADER);
     fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -55,7 +65,6 @@ Shader::Shader(const char* vertex_path, const char* fragment_path, Utils::Report
         glGetShaderInfoLog(fragment, 512, NULL, infoLog);
         r.append(Utils::Report::Type::ERROR, "fragment shader: " + std::string(infoLog));
     }
-    
     program = glCreateProgram();
     glAttachShader(program, vertex);
     glAttachShader(program, fragment);

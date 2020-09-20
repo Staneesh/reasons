@@ -36,7 +36,7 @@ int main()
     Utils::Report shader_report;
     Shader basic("src/shaders/triangle.vs", "src/shaders/triangle.fs", shader_report);
     shader_report.log_if_bad();
-
+    
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,  
          0.5f, -0.5f, 0.0f, 

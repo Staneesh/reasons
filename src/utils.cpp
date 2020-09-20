@@ -82,6 +82,11 @@ Utils::Report::Report()
     message = "";
 }
 
+Utils::Report::~Report()
+{
+    //log_if_bad();
+}
+
 Utils::Report::Report(const Report& r)
 {
     append(r);
@@ -89,7 +94,7 @@ Utils::Report::Report(const Report& r)
 
 const bool Utils::Report::is_bad() const
 {
-    if (message == "")
+    if (message.length() == 0)
     {
         return 0;
     }

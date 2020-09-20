@@ -19,6 +19,12 @@ Camera::Camera(unsigned int screen_width_pass, unsigned int screen_height_pass,
     up = up_pass;
     yaw = yaw_pass;
     pitch = pitch_pass;
+    sensitivity = default_sensitivity;
+    zoom = default_zoom;
+    movement_speed = default_speed;
+    world_up = up;
+
+    front = vec3(0.0f, 0.0, -1.0f);
 
     first_mouse = true;
     
@@ -29,11 +35,12 @@ Camera::Camera(unsigned int screen_width_pass, unsigned int screen_height_pass,
     last_y = screen_width / 2.0f;
 
     update_vectors();
+    //std::cout<<up.x<<' '<<up.y<<' '<<up.z<<std::endl;
+
 }
 
 glm::mat4 Camera::get_view_matrix()
 {
-    //std::cout<<front.x<<' '<<front.y<<' '<<front.z<<std::endl;
     return lookAt(position, position + front, up);
 }
 
@@ -59,11 +66,11 @@ void Camera::process_keyboard(const Direction& dir, float delta_time)
     }
     if (dir == Direction::LEFT)
     {
-        velocity += right;
+        velocity -= right;
     }
     if (dir == Direction::RIGHT)
     {
-        velocity -= right;
+        velocity += right;
     }
 
     velocity = normalize(velocity);
@@ -74,8 +81,8 @@ void Camera::process_keyboard(const Direction& dir, float delta_time)
 
 void Camera::process_mouse_movement(float x_offset, float y_offset, float delta_time)
 {
-    x_offset *= sensitivity * delta_time;
-    y_offset *= sensitivity * delta_time;
+    x_offset *= sensitivity * delta_time * 50.0f;
+    y_offset *= sensitivity * delta_time * 50.0f;
     
     yaw += x_offset;
     pitch += y_offset;
@@ -94,7 +101,7 @@ void Camera::process_mouse_movement(float x_offset, float y_offset, float delta_
 
 void Camera::process_mouse_scroll(float y_offset, float delta_time)
 {
-    zoom -= y_offset * delta_time;
+    zoom -= y_offset * delta_time * 50.0f;
     if (zoom < 1.0f)
     {
         zoom = 1.0f;

@@ -96,7 +96,7 @@ void Camera::process_mouse_movement(float x_offset, float y_offset, float delta_
     }
 
     yaw = glm::mod(yaw, 360.0f);
-    
+
     update_vectors();
 }
 
@@ -111,4 +111,9 @@ void Camera::process_mouse_scroll(float y_offset, float delta_time)
     {
         zoom = 45.0f;
     }
+}
+
+mat4 Camera::get_projection_view_matrix()
+{
+    return get_projection_matrix() * get_view_matrix();
 }

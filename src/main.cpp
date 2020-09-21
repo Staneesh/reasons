@@ -99,12 +99,10 @@ int main()
         basic.use();
 
         //TODO(stanisz): change this to projection-view matrix.
-        glm::mat4 projection = camera.get_projection_matrix();
-        basic.set_mat4("projection", projection);
+        glm::mat4 projection_view = camera.get_projection_view_matrix();
+        basic.set_mat4("projection_view", projection_view);
         //std::cout<<projection[1][1]<<std::endl;
 
-        glm::mat4 view = camera.get_view_matrix();
-        basic.set_mat4("view", view);
         
         glm::mat4 model = glm::mat4(1.0f);
         basic.set_mat4("model", model);

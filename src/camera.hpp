@@ -32,6 +32,8 @@ class Camera
     static const float constexpr default_sensitivity = 0.1f;
     static const float constexpr default_zoom = 45.0f;
     
+    glm::mat4 get_view_matrix();
+    glm::mat4 get_projection_matrix();
     void update_vectors();
 public:
     float last_x, last_y;
@@ -54,11 +56,9 @@ public:
         float speed = default_speed
         );
 
-    glm::mat4 get_view_matrix();
-    glm::mat4 get_projection_matrix();
+    glm::mat4 get_projection_view_matrix();
 
     void process_keyboard(const Direction& dir, float delta_time);
-    //TODO(stanisz): delta_time needed in both of theese?
     void process_mouse_movement(float x_offset, float y_offset, float delta_time);
     void process_mouse_scroll(float y_offset, float delta_time);
 };

@@ -52,26 +52,7 @@ int main()
     Shader basic("src/shaders/triangle.vs", "src/shaders/triangle.fs", shader_report);
     shader_report.log_if_bad();
 
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f, 
-         0.0f,  0.5f, -0.5f   
-    }; 
-
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
-    glBindVertexArray(0); 
+    Triangle::init();
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))
@@ -101,16 +82,15 @@ int main()
         
         glm::mat4 model = glm::mat4(1.0f);
         basic.set_mat4("model", model);
-
-        glBindVertexArray(VAO); 
+ 
+        Triangle::bind_vao();
         glDrawArrays(GL_TRIANGLES, 0, 3);
  
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    Triangle::free_opengl_resources();
     
     glfwTerminate();
     return 0;

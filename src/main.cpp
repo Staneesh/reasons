@@ -4,6 +4,7 @@
 #include <iostream>
 #include "shader.hpp"
 #include "camera.hpp"
+#include "triangle.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -51,9 +52,6 @@ int main()
     Shader basic("src/shaders/triangle.vs", "src/shaders/triangle.fs", shader_report);
     shader_report.log_if_bad();
 
-
-
-    
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  
          0.5f, -0.5f, -0.5f, 
@@ -98,11 +96,8 @@ int main()
 
         basic.use();
 
-        //TODO(stanisz): change this to projection-view matrix.
         glm::mat4 projection_view = camera.get_projection_view_matrix();
         basic.set_mat4("projection_view", projection_view);
-        //std::cout<<projection[1][1]<<std::endl;
-
         
         glm::mat4 model = glm::mat4(1.0f);
         basic.set_mat4("model", model);

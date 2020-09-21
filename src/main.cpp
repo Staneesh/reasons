@@ -75,11 +75,21 @@ int main()
 
     glBindVertexArray(0); 
 
+    unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))
     {
         float current_time = glfwGetTime();
         delta_time = current_time - last_frame;
         last_frame = current_time;
+        
+        if (frame_count_to_show_debug_time > 2*60)
+        {
+            std::cout<<"Render time: "<<delta_time<<"ms. ("
+            << int(1.0f / delta_time) << " FPS)" <<std::endl;
+            frame_count_to_show_debug_time = 0;
+        }
+        ++frame_count_to_show_debug_time;
+        
 
         processInput(window);
 

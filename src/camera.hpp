@@ -49,7 +49,10 @@ public:
         const vec3& position = vec3(0.0f, 0.0f, 0.0f), 
         const vec3& up = vec3(0.0f, 1.0f, 0.0f), 
         float yaw = default_yaw, 
-        float pitch = default_pitch);
+        float pitch = default_pitch,
+        float sensitivity = default_sensitivity,
+        float speed = default_speed
+        );
 
     glm::mat4 get_view_matrix();
     glm::mat4 get_projection_matrix();

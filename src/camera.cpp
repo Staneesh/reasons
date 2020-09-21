@@ -13,18 +13,19 @@ void Camera::update_vectors()
 }
 
 Camera::Camera(unsigned int screen_width_pass, unsigned int screen_height_pass,
-    const vec3& position_pass, const vec3& up_pass, float yaw_pass, float pitch_pass)
+    const vec3& position_pass, const vec3& up_pass, float yaw_pass, float pitch_pass,
+    float sensitivity_pass, float speed_pass)
 {
     position = position_pass;
     up = up_pass;
     yaw = yaw_pass;
     pitch = pitch_pass;
-    sensitivity = default_sensitivity;
     zoom = default_zoom;
-    movement_speed = default_speed;
     world_up = up;
-
     front = vec3(0.0f, 0.0, -1.0f);
+    sensitivity = default_sensitivity;
+    movement_speed = default_speed;
+
 
     first_mouse = true;
     
@@ -35,8 +36,6 @@ Camera::Camera(unsigned int screen_width_pass, unsigned int screen_height_pass,
     last_y = screen_width / 2.0f;
 
     update_vectors();
-    //std::cout<<up.x<<' '<<up.y<<' '<<up.z<<std::endl;
-
 }
 
 glm::mat4 Camera::get_view_matrix()
@@ -96,6 +95,8 @@ void Camera::process_mouse_movement(float x_offset, float y_offset, float delta_
         pitch = -89.00f;
     }
 
+    yaw = glm::mod(yaw, 360.0f);
+    
     update_vectors();
 }
 

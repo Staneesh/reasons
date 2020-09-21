@@ -64,8 +64,8 @@ int main()
         float pos_z = -(float)i - 1.0f;
         auto pos_to_push = glm::vec3(pos_x, pos_y, pos_z);
 
-        float rotation_angle = 360.0f * proportion;
-        auto rotation_axis = glm::vec3(0.0f, 1.0f, 0.0f);
+        float rotation_angle = glm::sin(i) * 360.0f;
+        auto rotation_axis = glm::vec3(0.0f, 0.0f, 1.0f);
 
         Triangle to_push(pos_to_push, rotation_angle, rotation_axis);
         triangles.push_back(to_push);

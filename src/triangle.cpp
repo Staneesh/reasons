@@ -3,9 +3,9 @@
 unsigned Triangle::vao = 0;
 unsigned Triangle::vbo = 0;
 const float Triangle::vertices[] = {
-        -0.5f, -0.5f, -0.5f,  
-         0.5f, -0.5f, -0.5f, 
-         0.0f,  0.5f, -0.5f   
+        -0.5f, -0.5f, 0.0f,  
+         0.5f, -0.5f, 0.0f, 
+         0.0f,  0.5f, 0.0f   
     }; 
 
 
@@ -26,9 +26,13 @@ void Triangle::init()
     bind_vao();
 }
 
-Triangle::Triangle(const glm::vec3& position_pass)
+Triangle::Triangle(const glm::vec3& position_pass, float rotation_angle_pass, 
+        const glm::vec3& rotation_axis_pass, const glm::vec3& scaling_vector_pass)
 {
     position = position_pass;
+    rotation_angle = rotation_angle_pass;
+    rotation_axis = rotation_axis_pass;
+    scaling_vector = scaling_vector_pass;
 }
 
 glm::mat4 Triangle::get_model_matrix() const

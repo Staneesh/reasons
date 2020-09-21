@@ -17,11 +17,16 @@ public:
     glm::vec3 rotation_axis;
     glm::vec3 scaling_vector;
 
-    static void init();
-    Triangle(const glm::vec3& position);
-    glm::mat4 get_model_matrix() const;
+    Triangle(
+        const glm::vec3& position, float rotation_angle = 0.0f, 
+        const glm::vec3& rotation_axis = glm::vec3(0.0f, 0.0f, 1.0f), 
+        const glm::vec3& scaling_vector = glm::vec3(1.0f));
+        
+    static void init();    
     static void free_opengl_resources();
     static void bind_vao();
+    
+    glm::mat4 get_model_matrix() const;
 };
 
 #endif

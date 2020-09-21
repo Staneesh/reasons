@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <vector>
 #include "shader.hpp"
 #include "camera.hpp"
 #include "triangle.hpp"
@@ -53,6 +54,22 @@ int main()
     shader_report.log_if_bad();
 
     Triangle::init();
+    std::vector<Triangle> triangles;
+    const unsigned triangles_count = 1000;
+    for (unsigned i = 0; i < triangles_count; ++i)
+    {
+        float proportion = (float)i/triangles_count;
+        float pos_x = glm::sin(i);
+        float pos_y = glm::cos(i);
+        float pos_z = -(float)i - 1.0f;
+        auto pos_to_push = glm::vec3(pos_x, pos_y, pos_z);
+
+        float rotation_angle = 360.0f * proportion;
+        auto rotation_axis = glm::vec3(0.0f, 1.0f, 0.0f);
+
+        Triangle to_push(pos_to_push, rotation_angle, rotation_axis);
+        triangles.push_back(to_push);
+    }
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))
@@ -72,7 +89,7 @@ int main()
 
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         basic.use();
@@ -80,11 +97,14 @@ int main()
         glm::mat4 projection_view = camera.get_projection_view_matrix();
         basic.set_mat4("projection_view", projection_view);
         
-        glm::mat4 model = glm::mat4(1.0f);
-        basic.set_mat4("model", model);
- 
         Triangle::bind_vao();
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        for (unsigned i = 0; i < triangles_count; ++i)
+        {
+            basic.set_mat4("model", triangles[i].get_model_matrix());
+ 
+            glDrawArrays(GL_TRIANGLES, 0, 3);
+        }
+        
  
         glfwSwapBuffers(window);
         glfwPollEvents();

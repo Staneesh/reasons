@@ -36,7 +36,7 @@ void Terrain::generate(
             triangle_indices.push_back(glm::uvec3(x + 1, number_of_tiles_per_side + 1 + x, number_of_tiles_per_side + 2 + x));
         }
     }
-    
+
 #if 0
     for (unsigned i = 0; i < triangle_indices.size(); ++i)
     {
@@ -45,4 +45,33 @@ void Terrain::generate(
     }
 #endif 
 
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
+    glGenVertexArrays(1, &vao);
+    
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_positions), &vertex_positions, GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_indices), &triangle_indices, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0); 
+
+    //NOTE(stanisz): vao registered vbo in glVertexAttribPointer. this unbind is ok.
+    glBindVertexArray(0); 
+}
+
+void Terrain::draw()
+{
+    glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+
+void Terrain::free_opengl_resources()
+{
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vbo);
+    glDeleteBuffers(1, &ebo);   
 }

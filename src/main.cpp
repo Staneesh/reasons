@@ -54,6 +54,10 @@ int main()
     Shader basic("src/shaders/triangle.vs", "src/shaders/triangle.fs", shader_report);
     shader_report.log_if_bad();
 
+    shader_report.clear();
+    Shader terrain_shader("src/shaders/terrain.vs", "src/shaders/terrain.fs", shader_report);
+    shader_report.log_if_bad();
+
     Triangle::init();
     std::vector<Triangle> triangles;
     const unsigned triangles_count = 1000;
@@ -109,13 +113,16 @@ int main()
             glDrawArrays(GL_TRIANGLES, 0, 3);
         }
         
+        terrain_shader.use();
+        terrain.draw();
  
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
     Triangle::free_opengl_resources();
-    
+    terrain.free_opengl_resources();
+
     glfwTerminate();
     return 0;
 }

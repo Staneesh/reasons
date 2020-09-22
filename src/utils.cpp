@@ -105,3 +105,8 @@ const bool Utils::Report::is_good() const
 {
     return !is_bad();
 }
+
+void Utils::Report::clear()
+{
+    message = "";
+}

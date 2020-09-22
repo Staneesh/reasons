@@ -1,6 +1,7 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
+#include "../include/glad/glad.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -26,6 +27,9 @@ public:
         float mesh_size, 
         unsigned number_of_tiles_per_side);
 
+    void draw();
+
+    void free_opengl_resources();
 };
 
 #endif

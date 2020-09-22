@@ -34,6 +34,8 @@ public:
 		void log();
 		void log_if_bad();
 
+		void clear();
+
 	private:
 		std::string message;
 		std::string disambiguate_message_type(const Type& t);

@@ -19,6 +19,7 @@ void Terrain::generate(
     glm::vec3 dz = glm::vec3(0.0f, 0.0f, tile_size);
     glm::vec3 dx = glm::vec3(tile_size, 0.0f, 0.0f);
 
+
     for (unsigned z = 0; z < number_of_tiles_per_side + 1; ++z)
     {
         glm::vec3 current_vertex_position = starting_position + (float)z * dz;
@@ -29,19 +30,20 @@ void Terrain::generate(
             current_vertex_position += dx;
             
             unsigned bottom_left = x + z * (number_of_tiles_per_side + 1);
-            unsigned bottom_right = bottom_left + 1;
-            unsigned top_left = bottom_left + number_of_tiles_per_side + 1;
-            unsigned top_right = top_left + 1;
+            unsigned top_left = bottom_left + 1;
+            unsigned bottom_right = bottom_left + number_of_tiles_per_side + 1;
+            unsigned top_right = bottom_right + 1;
 
-            if (x%2 == 0 && z%2 == 0)
+            if (x < number_of_tiles_per_side && z < number_of_tiles_per_side)
             {
-                triangle_indices.push_back(glm::uvec3(x + 1, x, number_of_tiles_per_side + 1 + x));
-                triangle_indices.push_back(glm::uvec3(x + 1, number_of_tiles_per_side + 1 + x, number_of_tiles_per_side + 2 + x));
+                triangle_indices.push_back(glm::uvec3(top_left, bottom_left, bottom_right));
+                triangle_indices.push_back(glm::uvec3(top_left, bottom_right, top_right));
             }
         }
     }
 
 #if 1
+    std::cout<<"INDICES:"<<std::endl;
     for (unsigned i = 0; i < triangle_indices.size(); ++i)
     {
         auto cur = triangle_indices[i];

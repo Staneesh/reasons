@@ -6,6 +6,7 @@
 #include "shader.hpp"
 #include "camera.hpp"
 #include "triangle.hpp"
+#include "terrain.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -70,6 +71,9 @@ int main()
         Triangle to_push(pos_to_push, rotation_angle, rotation_axis);
         triangles.push_back(to_push);
     }
+
+    Terrain terrain;
+    terrain.generate(glm::vec3(0.0f), 5.0f, 5);
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))

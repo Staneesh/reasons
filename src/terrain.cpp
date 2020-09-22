@@ -16,7 +16,7 @@ void Terrain::generate(
         position.y, 
         position.z - mesh_size / 2);
 
-    glm::vec3 dz = glm::vec3(0.0f, 0.0f, -tile_size);
+    glm::vec3 dz = glm::vec3(0.0f, 0.0f, tile_size);
     glm::vec3 dx = glm::vec3(tile_size, 0.0f, 0.0f);
 
     for (unsigned z = 0; z < number_of_tiles_per_side + 1; ++z)
@@ -25,19 +25,23 @@ void Terrain::generate(
         for (unsigned x = 0; x < number_of_tiles_per_side + 1; ++x)
         {
             vertex_positions.push_back(current_vertex_position);
-            //std::cout<<current_vertex_position.x<<" "<<current_vertex_position.y<<" "<<current_vertex_position.z<<std::endl;
+            std::cout<<current_vertex_position.x<<" "<<current_vertex_position.y<<" "<<current_vertex_position.z<<std::endl;
             current_vertex_position += dx;
             
             unsigned bottom_left = x + z * (number_of_tiles_per_side + 1);
             unsigned bottom_right = bottom_left + 1;
             unsigned top_left = bottom_left + number_of_tiles_per_side + 1;
             unsigned top_right = top_left + 1;
-            triangle_indices.push_back(glm::uvec3(x + 1, x, number_of_tiles_per_side + 1 + x));
-            triangle_indices.push_back(glm::uvec3(x + 1, number_of_tiles_per_side + 1 + x, number_of_tiles_per_side + 2 + x));
+
+            if (x%2 == 0 && z%2 == 0)
+            {
+                triangle_indices.push_back(glm::uvec3(x + 1, x, number_of_tiles_per_side + 1 + x));
+                triangle_indices.push_back(glm::uvec3(x + 1, number_of_tiles_per_side + 1 + x, number_of_tiles_per_side + 2 + x));
+            }
         }
     }
 
-#if 0
+#if 1
     for (unsigned i = 0; i < triangle_indices.size(); ++i)
     {
         auto cur = triangle_indices[i];
@@ -45,28 +49,28 @@ void Terrain::generate(
     }
 #endif 
 
+    glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ebo);
-    glGenVertexArrays(1, &vao);
     
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_positions), &vertex_positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertex_positions.size() * sizeof(glm::vec3), &vertex_positions[0], GL_STATIC_DRAW);
     
-    glBindBuffer(GL_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_indices), &triangle_indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangle_indices.size() * sizeof(glm::dvec3), &triangle_indices[0], GL_STATIC_DRAW);
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0); 
 
-    //NOTE(stanisz): vao registered vbo in glVertexAttribPointer. this unbind is ok.
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
 }
 
 void Terrain::draw()
 {
     glBindVertexArray(vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, number_of_triangles * 3, GL_UNSIGNED_INT, 0);
 }
 
 void Terrain::free_opengl_resources()

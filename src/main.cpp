@@ -19,7 +19,7 @@ const unsigned int SCR_HEIGHT = 1000;
 float delta_time = 0.0f;
 float last_frame = 0.0f;
 
-Camera camera(SCR_WIDTH, SCR_HEIGHT);
+Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.5f, 0.0f));
 
 int main()
 {
@@ -58,6 +58,7 @@ int main()
     Shader terrain_shader("src/shaders/terrain.vs", "src/shaders/terrain.fs", shader_report);
     shader_report.log_if_bad();
 
+#if 1
     Triangle::init();
     std::vector<Triangle> triangles;
     const unsigned triangles_count = 1000;
@@ -75,9 +76,10 @@ int main()
         Triangle to_push(pos_to_push, rotation_angle, rotation_axis);
         triangles.push_back(to_push);
     }
+    #endif
 
     Terrain terrain;
-    terrain.generate(glm::vec3(0.0f), 5.0f, 5);
+    terrain.generate(glm::vec3(0.0f), 1.0f, 2);
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))
@@ -100,9 +102,11 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        glm::mat4 projection_view = camera.get_projection_view_matrix();
+
+#if 1
         basic.use();
 
-        glm::mat4 projection_view = camera.get_projection_view_matrix();
         basic.set_mat4("projection_view", projection_view);
         
         Triangle::bind_vao();
@@ -112,10 +116,12 @@ int main()
  
             glDrawArrays(GL_TRIANGLES, 0, 3);
         }
-        
+#endif
+
         terrain_shader.use();
+        terrain_shader.set_mat4("projection_view", projection_view);
         terrain.draw();
- 
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

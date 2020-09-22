@@ -79,7 +79,7 @@ int main()
     #endif
 
     Terrain terrain;
-    terrain.generate(glm::vec3(0.0f), 1.0f, 2);
+    terrain.generate(glm::vec3(0.0f), 1.0f, 20);
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))

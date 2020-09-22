@@ -25,8 +25,10 @@ void Terrain::generate(
         glm::vec3 current_vertex_position = starting_position + (float)z * dz;
         for (unsigned x = 0; x < number_of_tiles_per_side + 1; ++x)
         {
+            float height = 0.3f;
+            current_vertex_position.y = (((float)rand()/(float)RAND_MAX - 0.5f) * 2.0f) * height;
             vertex_positions.push_back(current_vertex_position);
-            std::cout<<current_vertex_position.x<<" "<<current_vertex_position.y<<" "<<current_vertex_position.z<<std::endl;
+            //std::cout<<current_vertex_position.x<<" "<<current_vertex_position.y<<" "<<current_vertex_position.z<<std::endl;
             current_vertex_position += dx;
             
             unsigned bottom_left = x + z * (number_of_tiles_per_side + 1);
@@ -42,7 +44,7 @@ void Terrain::generate(
         }
     }
 
-#if 1
+#if 0
     std::cout<<"INDICES:"<<std::endl;
     for (unsigned i = 0; i < triangle_indices.size(); ++i)
     {

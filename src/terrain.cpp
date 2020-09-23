@@ -5,8 +5,10 @@ void Terrain::generate(
     float mesh_size_pass, 
     unsigned number_of_tiles_per_side,
     float amplitude_pass,
-    unsigned octaves_pass)
+    unsigned octaves_pass,
+    float roughness_pass)
 {
+    roughness = roughness_pass;
     octaves = octaves_pass;
     amplitude = amplitude_pass;
     number_of_triangles = number_of_tiles_per_side * number_of_tiles_per_side * 2;
@@ -23,6 +25,12 @@ void Terrain::generate(
     glm::vec3 dz = glm::vec3(0.0f, 0.0f, tile_size);
     glm::vec3 dx = glm::vec3(tile_size, 0.0f, 0.0f);
 
+    //vertex_positions = new std::vector<glm::fvec3>(number_of_vertices);
+    //triangle_indices = new std::vector<glm::uvec3>(number_of_triangles);
+    vertex_positions.reserve(number_of_triangles);
+    triangle_indices.reserve(number_of_triangles);
+
+    //std::cout<<"S:"<<vertex_positions->size()<<std::endl;
 
     for (unsigned z = 0; z < number_of_tiles_per_side + 1; ++z)
     {
@@ -85,6 +93,8 @@ void Terrain::draw()
 
 void Terrain::free_opengl_resources()
 {
+    //delete vertex_positions;
+    //delete triangle_indices;
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);   
@@ -119,22 +129,39 @@ float Terrain::get_height(unsigned x, unsigned z)
 {
     float result = 0.0f;
 
+    float d = (float)glm::pow(2, octaves - 1);
+
+    //std::cout<<"O:"<<octaves_power<<" "<<octaves_power_sum<<std::endl;
+    
+    float amp_sum = 0.0f;
     for (unsigned i = 0; i < octaves; ++i)
     {
-        unsigned div = glm::max(i * 2, 1u);
-        result += get_interpolated_noise_zero_one((float)x / div, (float)z / div);
+        amp_sum += (float)glm::pow(roughness, i); 
     }
-    
-    result /= octaves;
+
+    for (unsigned i = 0; i < octaves; ++i)
+    {
+        float frequency = (float)glm::pow(2, i) / d;
+        float amp = (float)glm::pow(roughness, i);
+
+        float noise = get_interpolated_noise_zero_one(frequency * x, frequency * z);
+        //std::cout<<"noise:"<<noise<<std::endl;
+        result += noise * amp;
+    }
+
+    result /= (amp_sum);
+    //std::cout<<"result:"<<result<<std::endl;
+
     result *= amplitude;
     result -= amplitude / 2.0f;
 
+    //std::cout<<"result:"<<result<<std::endl;
     return result;
 }
 
 float Terrain::get_noise_zero_one(unsigned x, unsigned z)
 {
-    unsigned seed = x * 997 + z * 8117;
+    unsigned seed = x * 49632 + z * 325176;
     srand(seed);
     float res = (float)rand()/(float)RAND_MAX;
     return res;

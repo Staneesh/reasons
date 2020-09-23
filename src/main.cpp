@@ -58,7 +58,7 @@ int main()
     Shader terrain_shader("src/shaders/terrain.vs", "src/shaders/terrain.fs", shader_report);
     shader_report.log_if_bad();
 
-#if 1
+#if 0
     Triangle::init();
     std::vector<Triangle> triangles;
     const unsigned triangles_count = 1000;
@@ -79,7 +79,7 @@ int main()
     #endif
 
     Terrain terrain;
-    terrain.generate(glm::vec3(0.0f), 2.0f, 20, 2.0f, 4);
+    terrain.generate(glm::vec3(0.0f), 10.0f, 50, 3.0f, 4, 0.9f);
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))
@@ -104,7 +104,7 @@ int main()
 
         glm::mat4 projection_view = camera.get_projection_view_matrix();
 
-#if 1
+#if 0
         basic.use();
 
         basic.set_mat4("projection_view", projection_view);

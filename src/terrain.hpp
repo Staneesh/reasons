@@ -14,7 +14,7 @@ class Terrain
     unsigned number_of_vertices;
     unsigned number_of_triangles;
     std::vector<glm::vec3> vertex_positions;
-    std::vector<glm::uvec3 > triangle_indices; 
+    std::vector<glm::uvec3> triangle_indices; 
 
     unsigned vbo, vao, ebo;
     float mesh_size;
@@ -23,6 +23,7 @@ class Terrain
 
     float amplitude;
     unsigned octaves;
+    float roughness;
 
     float cosine_interpolation(float a, float b, float blend);
     float get_noise_zero_one(unsigned x, unsigned z);
@@ -37,7 +38,8 @@ public:
         float mesh_size, 
         unsigned number_of_tiles_per_side,
         float amplitude,
-        unsigned octaves);
+        unsigned octaves,
+        float roughness);
 
     void draw();
 

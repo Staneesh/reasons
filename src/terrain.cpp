@@ -3,8 +3,12 @@
 void Terrain::generate(
     const glm::vec3& position_pass, 
     float mesh_size_pass, 
-    unsigned number_of_tiles_per_side)
+    unsigned number_of_tiles_per_side,
+    float amplitude_pass,
+    unsigned octaves_pass)
 {
+    octaves = octaves_pass;
+    amplitude = amplitude_pass;
     number_of_triangles = number_of_tiles_per_side * number_of_tiles_per_side * 2;
     position = position_pass;
     mesh_size = mesh_size_pass;
@@ -25,8 +29,7 @@ void Terrain::generate(
         glm::vec3 current_vertex_position = starting_position + (float)z * dz;
         for (unsigned x = 0; x < number_of_tiles_per_side + 1; ++x)
         {
-            float height = 0.3f;
-            current_vertex_position.y = (((float)rand()/(float)RAND_MAX - 0.5f) * 2.0f) * height;
+            current_vertex_position.y = get_height(x, z);
             vertex_positions.push_back(current_vertex_position);
             //std::cout<<current_vertex_position.x<<" "<<current_vertex_position.y<<" "<<current_vertex_position.z<<std::endl;
             current_vertex_position += dx;
@@ -74,7 +77,10 @@ void Terrain::generate(
 void Terrain::draw()
 {
     glBindVertexArray(vao);
+    //NOTE(stanisz): wireframe mode for debugging purposes.
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawElements(GL_TRIANGLES, number_of_triangles * 3, GL_UNSIGNED_INT, 0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void Terrain::free_opengl_resources()
@@ -82,4 +88,74 @@ void Terrain::free_opengl_resources()
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);   
+}
+
+float Terrain::cosine_interpolation(float a, float b, float blend)
+{
+    float theta = blend * M_PI;
+    float f = 0.5f * (1.0f - glm::cos(theta));
+    return a * (1.0f - f) + b * f;
+}
+
+float Terrain::get_interpolated_noise_zero_one(unsigned x, unsigned z)
+{
+    int int_x = (int)x;
+    int int_z = (int)z;
+    float fract_x = x - int_x;
+    float fract_z = z - int_z;
+
+    float v1 = get_smooth_noise_zero_one(int_x, int_z);
+    float v2 = get_smooth_noise_zero_one(int_x + 1, int_z);
+    float v3 = get_smooth_noise_zero_one(int_x, int_z + 1);
+    float v4 = get_smooth_noise_zero_one(int_x + 1, int_z + 1);
+
+    float i1 = cosine_interpolation(v1, v2, fract_x);
+    float i2 = cosine_interpolation(v3, v4, fract_x);
+
+    return cosine_interpolation(i1, i2,fract_z);
+}
+
+float Terrain::get_height(unsigned x, unsigned z)
+{
+    float result = 0.0f;
+
+    for (unsigned i = 0; i < octaves; ++i)
+    {
+        unsigned div = glm::max(i * 2, 1u);
+        result += get_interpolated_noise_zero_one((float)x / div, (float)z / div);
+    }
+    
+    result /= octaves;
+    result *= amplitude;
+    result -= amplitude / 2.0f;
+
+    return result;
+}
+
+float Terrain::get_noise_zero_one(unsigned x, unsigned z)
+{
+    unsigned seed = x * 997 + z * 8117;
+    srand(seed);
+    float res = (float)rand()/(float)RAND_MAX;
+    return res;
+}
+
+float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z)
+{
+    float sides = 
+    get_noise_zero_one(x + 1, z) + 
+    get_noise_zero_one(x - 1, z) + 
+    get_noise_zero_one(x, z + 1) +
+    get_noise_zero_one(x, z - 1);
+    
+    float corners = 
+    get_noise_zero_one(x + 1, z + 1) +
+    get_noise_zero_one(x - 1, z - 1) +
+    get_noise_zero_one(x - 1, z + 1) +
+    get_noise_zero_one(x + 1, z - 1);
+
+    float center = get_noise_zero_one(x, z);
+
+    float res = (sides + corners + center) / 9.0f;
+    return res;
 }

@@ -39,7 +39,7 @@ public:
         const glm::vec3& position,
         float mesh_size, 
         unsigned number_of_tiles_per_side,
-        float amplitude,
+        float amplitude_percentage_of_mesh_size,
         unsigned octaves,
         float roughness);
 

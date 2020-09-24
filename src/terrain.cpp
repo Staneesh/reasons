@@ -4,13 +4,13 @@ void Terrain::generate(
     const glm::vec3& position_pass, 
     float mesh_size_pass, 
     unsigned number_of_tiles_per_side,
-    float amplitude_pass,
+    float amplitude_percentage_of_mesh_size,
     unsigned octaves_pass,
     float roughness_pass)
 {
     roughness = roughness_pass;
     octaves = octaves_pass;
-    amplitude = amplitude_pass;
+    amplitude = amplitude_percentage_of_mesh_size * mesh_size_pass;
     number_of_triangles = number_of_tiles_per_side * number_of_tiles_per_side * 2;
     position = position_pass;
     mesh_size = mesh_size_pass;
@@ -102,8 +102,8 @@ void Terrain::generate(
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0); 
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-    glBindVertexArray(0); 
+    //glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    //glBindVertexArray(0); 
     //
     glGenBuffers(1, &normal_vbo);
     //glGenVertexArrays(1, &normal_vao);
@@ -145,6 +145,8 @@ void Terrain::generate_normals()
 
         //Utils::log_vec3(current_normal);
     }
+    for (unsigned i = 0; i < number_of_vertices; ++i) normals[i] = glm::normalize(normals[i]);
+
 }
 
 void Terrain::draw()

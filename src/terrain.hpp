@@ -2,10 +2,10 @@
 #define TERRAIN_H
 
 #include "../include/glad/glad.h"
+#include "utils.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <vector>
 #include <iostream>
 #include <random>
 
@@ -13,8 +13,8 @@ class Terrain
 {
     unsigned number_of_vertices;
     unsigned number_of_triangles;
-    std::vector<glm::vec3> vertex_positions;
-    std::vector<glm::uvec3> triangle_indices; 
+    glm::vec3* vertex_positions;
+    glm::uvec3* triangle_indices; 
 
     unsigned vbo, vao, ebo;
     float mesh_size;

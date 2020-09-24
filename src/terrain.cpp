@@ -25,12 +25,17 @@ void Terrain::generate(
     glm::vec3 dz = glm::vec3(0.0f, 0.0f, tile_size);
     glm::vec3 dx = glm::vec3(tile_size, 0.0f, 0.0f);
 
-    //vertex_positions = new std::vector<glm::fvec3>(number_of_vertices);
-    //triangle_indices = new std::vector<glm::uvec3>(number_of_triangles);
-    vertex_positions.reserve(number_of_triangles);
-    triangle_indices.reserve(number_of_triangles);
+    //vertex_positions = (std::vector<glm::vec3>*)malloc(sizeof(glm::vec3) * number_of_vertices);
+    //triangle_indices = (std::vector<glm::uvec3>*)malloc(sizeof(glm::uvec3) * number_of_vertices);
+    vertex_positions = (glm::vec3*)malloc(sizeof(glm::vec3) * number_of_vertices);
+    triangle_indices = (glm::uvec3*)malloc(sizeof(glm::uvec3) * number_of_triangles);
+    //vertex_positions.reserve(number_of_triangles);
+    //triangle_indices.reserve(number_of_triangles);
 
     //std::cout<<"S:"<<vertex_positions->size()<<std::endl;
+
+    unsigned indices_array_index = 0;
+    unsigned vertex_array_index = 0; 
 
     for (unsigned z = 0; z < number_of_tiles_per_side + 1; ++z)
     {
@@ -38,8 +43,11 @@ void Terrain::generate(
         for (unsigned x = 0; x < number_of_tiles_per_side + 1; ++x)
         {
             current_vertex_position.y = get_height(x, z);
-            vertex_positions.push_back(current_vertex_position);
+
+            
+            vertex_positions[vertex_array_index] = current_vertex_position;
             //std::cout<<current_vertex_position.x<<" "<<current_vertex_position.y<<" "<<current_vertex_position.z<<std::endl;
+            vertex_array_index++;
             current_vertex_position += dx;
             
             unsigned bottom_left = x + z * (number_of_tiles_per_side + 1);
@@ -49,8 +57,17 @@ void Terrain::generate(
 
             if (x < number_of_tiles_per_side && z < number_of_tiles_per_side)
             {
-                triangle_indices.push_back(glm::uvec3(top_left, bottom_left, bottom_right));
-                triangle_indices.push_back(glm::uvec3(top_left, bottom_right, top_right));
+                //std::cout<<indices_array_index<<" "<<z<<std::endl;
+                triangle_indices[indices_array_index] = 
+                glm::uvec3(top_left, bottom_left, bottom_right);
+              
+                indices_array_index++;
+
+                triangle_indices[indices_array_index] = 
+                glm::uvec3(top_left, bottom_right, top_right);
+               
+                indices_array_index++;
+                //std::cout<<"OK"<<std::endl;
             }
         }
     }
@@ -68,12 +85,15 @@ void Terrain::generate(
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ebo);
     
+    //Utils::log_here();
+
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, vertex_positions.size() * sizeof(glm::vec3), &vertex_positions[0], GL_STATIC_DRAW);
+    //std::cout<<sizeof(vertex_positions)<<std::endl;
+    glBufferData(GL_ARRAY_BUFFER, number_of_vertices * sizeof(glm::vec3), vertex_positions, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangle_indices.size() * sizeof(glm::dvec3), &triangle_indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, number_of_triangles * sizeof(glm::dvec3) , triangle_indices, GL_STATIC_DRAW);
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0); 
@@ -86,15 +106,15 @@ void Terrain::draw()
 {
     glBindVertexArray(vao);
     //NOTE(stanisz): wireframe mode for debugging purposes.
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawElements(GL_TRIANGLES, number_of_triangles * 3, GL_UNSIGNED_INT, 0);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
 void Terrain::free_opengl_resources()
 {
-    //delete vertex_positions;
-    //delete triangle_indices;
+    free(vertex_positions);
+    free(triangle_indices);
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);   

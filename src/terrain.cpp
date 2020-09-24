@@ -29,6 +29,7 @@ void Terrain::generate(
     //triangle_indices = (std::vector<glm::uvec3>*)malloc(sizeof(glm::uvec3) * number_of_vertices);
     vertex_positions = (glm::vec3*)malloc(sizeof(glm::vec3) * number_of_vertices);
     triangle_indices = (glm::uvec3*)malloc(sizeof(glm::uvec3) * number_of_triangles);
+    normals = (glm::vec3*)malloc(sizeof(glm::vec3) * number_of_vertices);
     //vertex_positions.reserve(number_of_triangles);
     //triangle_indices.reserve(number_of_triangles);
 
@@ -81,9 +82,12 @@ void Terrain::generate(
     }
 #endif 
 
+    generate_normals();
+
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ebo);
+
     
     //Utils::log_here();
 
@@ -100,6 +104,47 @@ void Terrain::generate(
 
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
+    //
+    glGenBuffers(1, &normal_vbo);
+    glGenVertexArrays(1, &normal_vao);
+    
+    glBindVertexArray(normal_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, normal_vbo);
+    glBufferData(GL_ARRAY_BUFFER, number_of_vertices * sizeof(glm::vec3), normals, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    glBindVertexArray(0); 
+}
+
+void Terrain::generate_normals()
+{
+    for (unsigned i = 0; i < number_of_vertices; ++i) normals[i] = glm::vec3(0.0f);
+    
+    for (unsigned i = 0; i < number_of_triangles; ++i)
+    {
+        unsigned index1 = triangle_indices[i].x;
+        unsigned index2 = triangle_indices[i].y;
+        unsigned index3 = triangle_indices[i].z;
+        glm::vec3 p1 = vertex_positions[index1];
+        glm::vec3 p2 = vertex_positions[index2];
+        glm::vec3 p3 = vertex_positions[index3];
+        glm::vec3 u = p2 - p1, v = p3 - p1;
+        
+        glm::vec3 current_normal;// = &normals[i];
+        current_normal.x = u.y * v.z - u.z * v.y;
+        current_normal.y = u.z * v.x - u.x * v.z;
+        current_normal.z = u.x * v.y - u.y * v.x;
+
+        current_normal = glm::normalize(current_normal);
+
+        normals[index1] += 0.3f * current_normal;
+        normals[index2] += 0.3f * current_normal;
+        normals[index3] += 0.3f * current_normal;
+
+        //Utils::log_vec3(current_normal);
+    }
 }
 
 void Terrain::draw()
@@ -115,6 +160,7 @@ void Terrain::free_opengl_resources()
 {
     free(vertex_positions);
     free(triangle_indices);
+    free(normals);
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);   

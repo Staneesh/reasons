@@ -110,3 +110,8 @@ void Utils::Report::clear()
 {
     message = "";
 }
+
+void Utils::log_vec3(const glm::vec3& v)
+{
+    std::cout<<v.x<<" "<<v.y<<" "<<v.z<<std::endl;
+}

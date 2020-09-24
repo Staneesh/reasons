@@ -106,9 +106,9 @@ void Terrain::generate(
     glBindVertexArray(0); 
     //
     glGenBuffers(1, &normal_vbo);
-    glGenVertexArrays(1, &normal_vao);
+    //glGenVertexArrays(1, &normal_vao);
     
-    glBindVertexArray(normal_vao);
+    //glBindVertexArray(normal_vao);
     glBindBuffer(GL_ARRAY_BUFFER, normal_vbo);
     glBufferData(GL_ARRAY_BUFFER, number_of_vertices * sizeof(glm::vec3), normals, GL_STATIC_DRAW);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);

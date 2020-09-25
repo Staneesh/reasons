@@ -21,20 +21,19 @@ class Camera
     float sensitivity;
     float zoom;
 
-    //NOTE(stanisz): position on the screen.
-    
     float screen_width, screen_height;
     
-
     static const float constexpr default_yaw = -90.0f;
     static const float constexpr default_pitch = 0.0f;
     static const float constexpr default_speed = 2.5f;
     static const float constexpr default_sensitivity = 0.1f;
     static const float constexpr default_zoom = 45.0f;
     
-    glm::mat4 get_view_matrix();
-    glm::mat4 get_projection_matrix();
+    glm::mat4 get_view_matrix() const;
+    glm::mat4 get_projection_matrix() const;
+
     void update_vectors();
+    
 public:
     float last_x, last_y;
     bool first_mouse;
@@ -56,7 +55,7 @@ public:
         float speed = default_speed
         );
 
-    glm::mat4 get_projection_view_matrix();
+    glm::mat4 get_projection_view_matrix() const;
 
     void process_keyboard(const Direction& dir, float delta_time);
     void process_mouse_movement(float x_offset, float y_offset, float delta_time);

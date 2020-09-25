@@ -38,12 +38,12 @@ Camera::Camera(unsigned int screen_width_pass, unsigned int screen_height_pass,
     update_vectors();
 }
 
-glm::mat4 Camera::get_view_matrix()
+glm::mat4 Camera::get_view_matrix() const
 {
     return lookAt(position, position + front, up);
 }
 
-glm::mat4 Camera::get_projection_matrix()
+glm::mat4 Camera::get_projection_matrix() const
 {
     return perspective(radians(zoom), (float)screen_width / (float)screen_height, 
     0.1f, 100.0f);
@@ -113,7 +113,7 @@ void Camera::process_mouse_scroll(float y_offset, float delta_time)
     }
 }
 
-mat4 Camera::get_projection_view_matrix()
+mat4 Camera::get_projection_view_matrix() const
 {
     return get_projection_matrix() * get_view_matrix();
 }

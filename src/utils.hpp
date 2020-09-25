@@ -81,6 +81,7 @@ public:
 		bool is_err() const {return !is_ok();}
 		Ok_type get_ok() const {assert(type == Type::OK); return ok;}
 		Err_type get_err() const {assert(type == Type::ERR); return err;}
+		Err_type log_if_err() const {if (type == Type::ERR) std::cout<<err<<std::endl;}
 
 	private:
 		Ok_type ok;

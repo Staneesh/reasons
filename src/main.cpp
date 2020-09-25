@@ -26,7 +26,11 @@ int main()
     glm::vec3 f(1.0f);
     LOG_VEC(f);
     LOG(f.y);
-    
+    glm::fvec4 a(0.5f);
+    LOG_VEC4(a);
+    glm::fmat4 m(1.0f);
+    LOG_MAT4(m);
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

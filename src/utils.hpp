@@ -93,8 +93,14 @@ public:
 	static void log_here();	
 	static void log_vec3(const glm::vec3& v);
 
-#define LOG(x) {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#x<<" = "<<x<<std::endl;}
-#define LOG_VEC(v) {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#v<<" = {"<<v.x<<", "<<v.y<<", "<<v.z<<"}"<<std::endl;}
+#define LOG(x)      {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#x<<" = "<<x<<std::endl;}
+#define LOG_VEC(v)  {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#v<<" = {"<<v.x<<", "<<v.y<<", "<<v.z<<"}"<<std::endl;}
+#define LOG_VEC4(v) {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#v<<" = {"<<v.x<<", "<<v.y<<", "<<v.z<<", "<<v.w<<"}"<<std::endl;}
+#define LOG_MAT4(m) {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#m<<" = {\n"<<m[0].x<<", "<<m[1].x<<", "<<m[2].x<<", "<<m[3].x<<std::endl; \
+					 std::cout<<m[0].y<<", "<<m[1].y<<", "<<m[2].y<<", "<<m[3].y<<std::endl; \
+					 std::cout<<m[0].z<<", "<<m[1].z<<", "<<m[2].z<<", "<<m[3].z<<std::endl; \
+					 std::cout<<m[0].w<<", "<<m[1].w<<", "<<m[2].w<<", "<<m[3].w<<"\n}"<<std::endl;}
+
 
 };
 

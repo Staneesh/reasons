@@ -43,6 +43,27 @@ public:
 		std::string disambiguate_message_type(const Type& t);
 	};
 
+	template<typename T>
+	class Option
+	{
+	public:
+		enum class Type
+		{
+			NONE,
+			SOME
+		};
+
+		Option() {type = Type::NONE;}
+		Option(T val) {value = val; type = Type::SOME;}
+		bool is_some() const {if(type == Type::SOME) return true; assert(type == Type::NONE); return false;}
+		bool is_none() const {return !is_some();}
+		T get_value() const {assert(type == Type::SOME); return value;}
+
+	private:
+		T value;
+		Type type;
+	};
+
 	template<typename Ok_type, typename Err_type>
 	class Result
 	{

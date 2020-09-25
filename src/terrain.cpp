@@ -149,7 +149,7 @@ void Terrain::generate_normals()
 
 }
 
-void Terrain::draw()
+void Terrain::draw() const
 {
     glBindVertexArray(vao);
     //NOTE(stanisz): wireframe mode for debugging purposes.
@@ -169,14 +169,14 @@ void Terrain::free_opengl_resources()
     glDeleteBuffers(1, &ebo);   
 }
 
-float Terrain::cosine_interpolation(float a, float b, float blend)
+float Terrain::cosine_interpolation(float a, float b, float blend) const
 {
     float theta = blend * M_PI;
     float f = 0.5f * (1.0f - glm::cos(theta));
     return a * (1.0f - f) + b * f;
 }
 
-float Terrain::get_interpolated_noise_zero_one(unsigned x, unsigned z)
+float Terrain::get_interpolated_noise_zero_one(unsigned x, unsigned z) const
 {
     int int_x = (int)x;
     int int_z = (int)z;
@@ -194,7 +194,7 @@ float Terrain::get_interpolated_noise_zero_one(unsigned x, unsigned z)
     return cosine_interpolation(i1, i2,fract_z);
 }
 
-float Terrain::get_height(unsigned x, unsigned z)
+float Terrain::get_height(unsigned x, unsigned z) const
 {
     float result = 0.0f;
 
@@ -228,7 +228,7 @@ float Terrain::get_height(unsigned x, unsigned z)
     return result;
 }
 
-float Terrain::get_noise_zero_one(unsigned x, unsigned z)
+float Terrain::get_noise_zero_one(unsigned x, unsigned z) const
 {
     unsigned seed = x * 49632 + z * 325176;
     srand(seed);
@@ -236,7 +236,7 @@ float Terrain::get_noise_zero_one(unsigned x, unsigned z)
     return res;
 }
 
-float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z)
+float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z) const
 {
     float sides = 
     get_noise_zero_one(x + 1, z) + 

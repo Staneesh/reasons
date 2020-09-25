@@ -62,11 +62,6 @@ void Utils::Report::log_if_bad()
     }
 }
 
-void Utils::log_here()
-{
-    std::cout<<"HERE!"<<std::endl;
-}
-
 Utils::Report::Report(const Type& t, const std::string& m)
 {
     append(t, m);
@@ -109,9 +104,4 @@ const bool Utils::Report::is_good() const
 void Utils::Report::clear()
 {
     message = "";
-}
-
-void Utils::log_vec3(const glm::vec3& v)
-{
-    std::cout<<v.x<<" "<<v.y<<" "<<v.z<<std::endl;
 }

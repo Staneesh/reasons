@@ -99,8 +99,6 @@ public:
 	};
 
 	static const Report load_entire_file(const char* path, unsigned char** where);
-	static void log_here();	
-	static void log_vec3(const glm::vec3& v);
 };
 
 #endif

@@ -1,5 +1,10 @@
 #include "terrain.hpp"
 
+Terrain::Terrain()
+{
+    LOG_STRING("Please provide arguments for construction of Terrain struct."); assert(0==1);
+}
+
 void Terrain::generate_terrain(
     const glm::vec3& position_pass, 
     float mesh_size_pass, 
@@ -25,15 +30,9 @@ void Terrain::generate_terrain(
     glm::vec3 dz = glm::vec3(0.0f, 0.0f, tile_size);
     glm::vec3 dx = glm::vec3(tile_size, 0.0f, 0.0f);
 
-    //vertex_positions = (std::vector<glm::vec3>*)malloc(sizeof(glm::vec3) * number_of_vertices);
-    //triangle_indices = (std::vector<glm::uvec3>*)malloc(sizeof(glm::uvec3) * number_of_vertices);
     vertex_positions = (glm::vec3*)malloc(sizeof(glm::vec3) * number_of_vertices);
     triangle_indices = (glm::uvec3*)malloc(sizeof(glm::uvec3) * number_of_triangles);
     normals = (glm::vec3*)malloc(sizeof(glm::vec3) * number_of_vertices);
-    //vertex_positions.reserve(number_of_triangles);
-    //triangle_indices.reserve(number_of_triangles);
-
-    //std::cout<<"S:"<<vertex_positions->size()<<std::endl;
 
     unsigned indices_array_index = 0;
     unsigned vertex_array_index = 0; 
@@ -45,9 +44,7 @@ void Terrain::generate_terrain(
         {
             current_vertex_position.y = get_height(x, z);
 
-            
             vertex_positions[vertex_array_index] = current_vertex_position;
-            //std::cout<<current_vertex_position.x<<" "<<current_vertex_position.y<<" "<<current_vertex_position.z<<std::endl;
             vertex_array_index++;
             current_vertex_position += dx;
             
@@ -58,7 +55,6 @@ void Terrain::generate_terrain(
 
             if (x < number_of_tiles_per_side && z < number_of_tiles_per_side)
             {
-                //std::cout<<indices_array_index<<" "<<z<<std::endl;
                 triangle_indices[indices_array_index] = 
                 glm::uvec3(top_left, bottom_left, bottom_right);
               
@@ -68,19 +64,9 @@ void Terrain::generate_terrain(
                 glm::uvec3(top_left, bottom_right, top_right);
                
                 indices_array_index++;
-                //std::cout<<"OK"<<std::endl;
             }
         }
     }
-
-#if 0
-    std::cout<<"INDICES:"<<std::endl;
-    for (unsigned i = 0; i < triangle_indices.size(); ++i)
-    {
-        auto cur = triangle_indices[i];
-        std::cout<<cur.x<<' '<<cur.y<<' '<<cur.z<<std::endl;
-    }
-#endif 
 
     generate_normals();
 
@@ -88,12 +74,8 @@ void Terrain::generate_terrain(
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ebo);
 
-    
-    //Utils::log_here();
-
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    //std::cout<<sizeof(vertex_positions)<<std::endl;
     glBufferData(GL_ARRAY_BUFFER, number_of_vertices * sizeof(glm::vec3), vertex_positions, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -102,13 +84,7 @@ void Terrain::generate_terrain(
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0); 
 
-    //glBindBuffer(GL_ARRAY_BUFFER, 0); 
-    //glBindVertexArray(0); 
-    //
     glGenBuffers(1, &normal_vbo);
-    //glGenVertexArrays(1, &normal_vao);
-    
-    //glBindVertexArray(normal_vao);
     glBindBuffer(GL_ARRAY_BUFFER, normal_vbo);
     glBufferData(GL_ARRAY_BUFFER, number_of_vertices * sizeof(glm::vec3), normals, GL_STATIC_DRAW);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -142,16 +118,15 @@ void Terrain::generate_normals()
         normals[index1] += 0.3f * current_normal;
         normals[index2] += 0.3f * current_normal;
         normals[index3] += 0.3f * current_normal;
-
-        //Utils::log_vec3(current_normal);
     }
-    for (unsigned i = 0; i < number_of_vertices; ++i) normals[i] = glm::normalize(normals[i]);
 
+    for (unsigned i = 0; i < number_of_vertices; ++i) normals[i] = glm::normalize(normals[i]);
 }
 
 void Terrain::draw() const
 {
     glBindVertexArray(vao);
+
     //NOTE(stanisz): wireframe mode for debugging purposes.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawElements(GL_TRIANGLES, number_of_triangles * 3, GL_UNSIGNED_INT, 0);
@@ -200,8 +175,6 @@ float Terrain::get_height(unsigned x, unsigned z) const
 
     float d = (float)glm::pow(2, octaves - 1);
 
-    //std::cout<<"O:"<<octaves_power<<" "<<octaves_power_sum<<std::endl;
-    
     float amp_sum = 0.0f;
     for (unsigned i = 0; i < octaves; ++i)
     {
@@ -214,17 +187,13 @@ float Terrain::get_height(unsigned x, unsigned z) const
         float amp = (float)glm::pow(roughness, i);
 
         float noise = get_interpolated_noise_zero_one(frequency * x, frequency * z);
-        //std::cout<<"noise:"<<noise<<std::endl;
         result += noise * amp;
     }
 
     result /= (amp_sum);
-    //std::cout<<"result:"<<result<<std::endl;
 
     result *= amplitude;
     result -= amplitude / 2.0f;
-
-    //std::cout<<"result:"<<result<<std::endl;
     return result;
 }
 

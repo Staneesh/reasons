@@ -57,7 +57,7 @@ public:
         unsigned octaves,
         float roughness);
 
-    Terrain() {LOG_STRING("Please provide arguments for construction of Terrain struct."); assert(0==1);}
+    Terrain();
     void draw() const;
     void free_opengl_resources();
 };

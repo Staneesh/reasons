@@ -1,7 +1,6 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec4 pos;
 in vec3 world_pos;
 in vec3 normal;
 
@@ -31,5 +30,4 @@ void main()
         
     vec3 result = (ambient + diffuse + specular) * terrain_color;
     FragColor = vec4(result, 1.0);
-    //FragColor = vec4(normal.x, normal.y, 0.5f, 1.0f);
 };

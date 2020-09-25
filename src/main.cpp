@@ -54,8 +54,7 @@ int main()
     Shader terrain_shader("src/shaders/terrain.vs", "src/shaders/terrain.fs", shader_report);
     shader_report.log_if_bad();
 
-    Terrain terrain;
-    terrain.generate(glm::vec3(0.0f), 20.0f, 10, 0.5f, 5, 0.6f);
+    Terrain terrain(glm::vec3(0.0f), 20.0f, 10, 0.5f, 5, 0.6f);
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))
@@ -87,7 +86,7 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    
+
     terrain.free_opengl_resources();
 
     glfwTerminate();

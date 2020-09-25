@@ -24,6 +24,7 @@ class Terrain
     unsigned vbo, vao, ebo, normal_vbo;
     float mesh_size;
     float tile_size;
+    //NOTE(stanisz): position of the center of the terrain mesh in world coords.
     glm::vec3 position;
 
     float amplitude;
@@ -37,9 +38,8 @@ class Terrain
     float get_height(unsigned x, unsigned z) const;
 
     void generate_normals();
-public:
 
-    void generate(
+    void generate_terrain(
         const glm::vec3& position,
         float mesh_size, 
         unsigned number_of_tiles_per_side,
@@ -47,8 +47,18 @@ public:
         unsigned octaves,
         float roughness);
 
-    void draw() const;
+public:
 
+    Terrain(
+        const glm::vec3& position,
+        float mesh_size, 
+        unsigned number_of_tiles_per_side,
+        float amplitude_percentage_of_mesh_size,
+        unsigned octaves,
+        float roughness);
+
+    Terrain() {LOG_STRING("Please provide arguments for construction of Terrain struct."); assert(0==1);}
+    void draw() const;
     void free_opengl_resources();
 };
 

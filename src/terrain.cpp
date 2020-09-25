@@ -1,6 +1,6 @@
 #include "terrain.hpp"
 
-void Terrain::generate(
+void Terrain::generate_terrain(
     const glm::vec3& position_pass, 
     float mesh_size_pass, 
     unsigned number_of_tiles_per_side,
@@ -254,4 +254,17 @@ float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z) const
 
     float res = (sides + corners + center) / 9.0f;
     return res;
+}
+
+Terrain::Terrain(
+    const glm::vec3& position,
+    float mesh_size, 
+    unsigned number_of_tiles_per_side,
+    float amplitude_percentage_of_mesh_size,
+    unsigned octaves,
+    float roughness
+)
+{
+    generate_terrain(position, mesh_size, number_of_tiles_per_side, 
+    amplitude_percentage_of_mesh_size, octaves, roughness);
 }

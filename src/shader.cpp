@@ -1,11 +1,11 @@
 #include "shader.hpp"
 
-unsigned Shader::get_id()
+unsigned Shader::get_id() const
 {
 	return id;
 }
 
-void Shader::use()
+void Shader::use() const
 {
 	glUseProgram(id);
 }

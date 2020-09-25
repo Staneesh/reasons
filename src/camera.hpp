@@ -33,9 +33,13 @@ class Camera
     glm::mat4 get_projection_matrix() const;
 
     void update_vectors();
-    
+
 public:
+    //NOTE(stanisz): position of mouse on the screen 
+    // during last frame.
     float last_x, last_y;
+    //NOTE(stanisz): if true, the mouse has never been moved. 
+    // False otherwise.
     bool first_mouse;
 
     enum class Direction

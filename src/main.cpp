@@ -23,14 +23,6 @@ Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.5f, 0.0f));
 
 int main()
 {
-    glm::vec3 f(1.0f);
-    LOG_VEC(f);
-    LOG(f.y);
-    glm::fvec4 a(0.5f);
-    LOG_VEC4(a);
-    glm::fmat4 m(1.0f);
-    LOG_MAT4(m);
-
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -59,32 +51,8 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     Utils::Report shader_report;
-    Shader basic("src/shaders/triangle.vs", "src/shaders/triangle.fs", shader_report);
-    shader_report.log_if_bad();
-
-    shader_report.clear();
     Shader terrain_shader("src/shaders/terrain.vs", "src/shaders/terrain.fs", shader_report);
     shader_report.log_if_bad();
-
-#if 0
-    Triangle::init();
-    std::vector<Triangle> triangles;
-    const unsigned triangles_count = 1000;
-    for (unsigned i = 0; i < triangles_count; ++i)
-    {
-        float proportion = (float)i/triangles_count;
-        float pos_x = glm::sin(i);
-        float pos_y = glm::cos(i);
-        float pos_z = -(float)i - 1.0f;
-        auto pos_to_push = glm::vec3(pos_x, pos_y, pos_z);
-
-        float rotation_angle = glm::sin(i) * 360.0f;
-        auto rotation_axis = glm::vec3(0.0f, 0.0f, 1.0f);
-
-        Triangle to_push(pos_to_push, rotation_angle, rotation_axis);
-        triangles.push_back(to_push);
-    }
-    #endif
 
     Terrain terrain;
     terrain.generate(glm::vec3(0.0f), 20.0f, 10, 0.5f, 5, 0.6f);
@@ -112,20 +80,6 @@ int main()
 
         glm::mat4 projection_view = camera.get_projection_view_matrix();
 
-#if 0
-        basic.use();
-
-        basic.set_mat4("projection_view", projection_view);
-        
-        Triangle::bind_vao();
-        for (unsigned i = 0; i < triangles_count; ++i)
-        {
-            basic.set_mat4("model", triangles[i].get_model_matrix());
- 
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-        }
-#endif
-
         terrain_shader.use();
         terrain_shader.set_mat4("projection_view", projection_view);
         terrain.draw();
@@ -133,8 +87,7 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
-    Triangle::free_opengl_resources();
+    
     terrain.free_opengl_resources();
 
     glfwTerminate();

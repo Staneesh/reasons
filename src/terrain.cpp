@@ -160,9 +160,10 @@ void Terrain::draw()
 
 void Terrain::free_opengl_resources()
 {
-    free(vertex_positions);
-    free(triangle_indices);
-    free(normals);
+    if (vertex_positions) free(vertex_positions);
+    if (triangle_indices) free(triangle_indices);
+    if (normals) free(normals);
+    
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);   

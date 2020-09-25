@@ -9,13 +9,13 @@ void Terrain::generate_terrain(
     const glm::vec3& position_pass, 
     float mesh_size_pass, 
     unsigned number_of_tiles_per_side,
-    float amplitude_percentage_of_mesh_size,
+    float amplitude_pass,
     unsigned octaves_pass,
     float roughness_pass)
-{
+{   
     roughness = roughness_pass;
     octaves = octaves_pass;
-    amplitude = amplitude_percentage_of_mesh_size * mesh_size_pass;
+    amplitude = amplitude_pass;
     number_of_triangles = number_of_tiles_per_side * number_of_tiles_per_side * 2;
     position = position_pass;
     mesh_size = mesh_size_pass;
@@ -144,14 +144,15 @@ void Terrain::free_opengl_resources()
     glDeleteBuffers(1, &ebo);   
 }
 
-float Terrain::cosine_interpolation(float a, float b, float blend) const
+float Terrain::cosine_interpolation(float a, float b, float blend) 
 {
     float theta = blend * M_PI;
     float f = 0.5f * (1.0f - glm::cos(theta));
+    //return (1.0f - blend) * a + blend * b;
     return a * (1.0f - f) + b * f;
 }
 
-float Terrain::get_interpolated_noise_zero_one(unsigned x, unsigned z) const
+float Terrain::get_interpolated_noise_zero_one(float x, float z) 
 {
     int int_x = (int)x;
     int int_z = (int)z;
@@ -166,10 +167,10 @@ float Terrain::get_interpolated_noise_zero_one(unsigned x, unsigned z) const
     float i1 = cosine_interpolation(v1, v2, fract_x);
     float i2 = cosine_interpolation(v3, v4, fract_x);
 
-    return cosine_interpolation(i1, i2,fract_z);
+    return cosine_interpolation(i1, i2, fract_z);
 }
 
-float Terrain::get_height(unsigned x, unsigned z) const
+float Terrain::get_height(unsigned x, unsigned z) 
 {
     float result = 0.0f;
 
@@ -181,37 +182,41 @@ float Terrain::get_height(unsigned x, unsigned z) const
         amp_sum += (float)glm::pow(roughness, i); 
     }
 
+    float offset = 0.0f;
     for (unsigned i = 0; i < octaves; ++i)
     {
         float frequency = (float)glm::pow(2, i) / d;
-        float amp = (float)glm::pow(roughness, i);
+        float amp = (float)glm::pow(roughness, i) * amplitude;
 
-        float noise = get_interpolated_noise_zero_one(frequency * x, frequency * z);
+        
+        float noise = get_interpolated_noise_zero_one(frequency * (x + offset), frequency * (z + offset)) * 2.0f - 1.0f;
         result += noise * amp;
     }
 
-    result /= (amp_sum);
+    //result = get_interpolated_noise_zero_one((float)(x + offset) / 8, (float)(z + offset) / 8) * 2.0f - 1.0f;
+    //result *= amplitude;
+    //result /= (amp_sum);
 
-    result *= amplitude;
-    result -= amplitude / 2.0f;
     return result;
 }
 
-float Terrain::get_noise_zero_one(unsigned x, unsigned z) const
+float Terrain::get_noise_zero_one(unsigned x, unsigned z)
 {
-    unsigned seed = x * 49632 + z * 325176;
-    srand(seed);
+    unsigned cur_seed = (unsigned)(((unsigned long long)seed + x * 49632 + z * 325176) % 1000007);
+    srand(cur_seed);
     float res = (float)rand()/(float)RAND_MAX;
     return res;
 }
 
-float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z) const
+float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z) 
 {
     float sides = 
     get_noise_zero_one(x + 1, z) + 
     get_noise_zero_one(x - 1, z) + 
     get_noise_zero_one(x, z + 1) +
     get_noise_zero_one(x, z - 1);
+
+    sides /= 8.0f;
     
     float corners = 
     get_noise_zero_one(x + 1, z + 1) +
@@ -219,9 +224,13 @@ float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z) const
     get_noise_zero_one(x - 1, z + 1) +
     get_noise_zero_one(x + 1, z - 1);
 
+    corners /= 16.0f;
+
     float center = get_noise_zero_one(x, z);
 
-    float res = (sides + corners + center) / 9.0f;
+    center /= 4.0f;
+
+    float res = (sides + corners + center);
     return res;
 }
 
@@ -229,11 +238,12 @@ Terrain::Terrain(
     const glm::vec3& position,
     float mesh_size, 
     unsigned number_of_tiles_per_side,
-    float amplitude_percentage_of_mesh_size,
+    float amplitude_pass,
     unsigned octaves,
     float roughness
 )
 {
+    seed = rand() % 1000000;
     generate_terrain(position, mesh_size, number_of_tiles_per_side, 
-    amplitude_percentage_of_mesh_size, octaves, roughness);
+    amplitude_pass, octaves, roughness);
 }

@@ -31,11 +31,12 @@ class Terrain
     unsigned octaves;
     float roughness;
 
-    float cosine_interpolation(float a, float b, float blend) const;
-    float get_noise_zero_one(unsigned x, unsigned z) const;
-    float get_smooth_noise_zero_one(unsigned x, unsigned z) const;
-    float get_interpolated_noise_zero_one(unsigned x, unsigned z) const;
-    float get_height(unsigned x, unsigned z) const;
+    unsigned seed;
+    float cosine_interpolation(float a, float b, float blend);
+    float get_noise_zero_one(unsigned x, unsigned z);
+    float get_smooth_noise_zero_one(unsigned x, unsigned z);
+    float get_interpolated_noise_zero_one(float x, float z);
+    float get_height(unsigned x, unsigned z);
 
     void generate_normals();
 
@@ -43,7 +44,7 @@ class Terrain
         const glm::vec3& position,
         float mesh_size, 
         unsigned number_of_tiles_per_side,
-        float amplitude_percentage_of_mesh_size,
+        float amplitude_pass,
         unsigned octaves,
         float roughness);
 

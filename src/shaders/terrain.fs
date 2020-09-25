@@ -2,7 +2,7 @@
 out vec4 FragColor;
 
 in vec3 world_pos;
-in vec3 normal;
+in vec3 normal_pass;
 
 uniform vec3 camera_pos;
 
@@ -12,6 +12,8 @@ vec3 light_color = vec3(1.0f, 1.0f, 1.0f);
 
 void main()
 {
+    vec3 normal = normalize(normal_pass);
+
     // ambient
     float ambient_strength = 0.1;
     vec3 ambient = ambient_strength * light_color;

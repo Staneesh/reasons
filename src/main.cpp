@@ -79,7 +79,10 @@ int main()
     #endif
 
     Terrain terrain;
-    terrain.generate(glm::vec3(0.0f), 20.0f, 80, 0.5f, 5, 0.6f);
+    terrain.generate(glm::vec3(0.0f), 20.0f, 10, 0.5f, 5, 0.6f);
+
+    Utils::Result<int, std::string> r("ERROR!");
+    std::cout<<r.is_ok()<<" "<<r.get_err()<<std::endl;
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))

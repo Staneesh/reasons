@@ -8,6 +8,7 @@
 #include <iostream>
 #include <glm/glm.hpp>
 
+
 class Utils
 {
 public:
@@ -40,6 +41,30 @@ public:
 	private:
 		std::string message;
 		std::string disambiguate_message_type(const Type& t);
+	};
+
+	template<typename Ok_type, typename Err_type>
+	class Result
+	{
+	public:
+		enum class Type
+		{
+			OK,
+			ERR
+		};
+
+		Result(){std::cout<<"Could not create an empty result."<<std::endl; assert(1 == 0);}
+		Result(Ok_type val) {ok = val; type = Type::OK;}
+		Result(Err_type val) {err = val; type = Type::ERR;}
+		bool is_ok() const {if (type == Type::OK) return true; assert(type == Type::ERR); return false;}
+		bool is_err() const {return !is_ok();}
+		Ok_type get_ok() const {assert(type == Type::OK); return ok;}
+		Err_type get_err() const {assert(type == Type::ERR); return err;}
+
+	private:
+		Ok_type ok;
+		Err_type err;
+		Type type;
 	};
 
 	static const Report load_entire_file(const char* path, unsigned char** where);

@@ -23,6 +23,10 @@ Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.5f, 0.0f));
 
 int main()
 {
+    glm::vec3 f(1.0f);
+    LOG_VEC(f);
+    LOG(f.y);
+    
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

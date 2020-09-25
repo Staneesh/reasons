@@ -92,6 +92,10 @@ public:
 	static const Report load_entire_file(const char* path, unsigned char** where);
 	static void log_here();	
 	static void log_vec3(const glm::vec3& v);
+
+#define LOG(x) {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#x<<" = "<<x<<std::endl;}
+#define LOG_VEC(v) {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#v<<" = {"<<v.x<<", "<<v.y<<", "<<v.z<<"}"<<std::endl;}
+
 };
 
 #endif

@@ -3,12 +3,14 @@ out vec4 FragColor;
 
 in vec3 world_pos;
 in vec3 normal_pass;
+in float visibility;
 
 uniform vec3 camera_pos;
 
-vec3 light_pos = vec3(0.0f, 2.0f, 0.0f);
-vec3 terrain_color = vec3(0.2f, 0.8f, 0.1f);
-vec3 light_color = vec3(1.0f, 1.0f, 1.0f);
+const vec3 light_pos = vec3(0.0f, 2.0f, 0.0f);
+const vec3 terrain_color = vec3(0.2f, 0.8f, 0.1f);
+const vec3 light_color = vec3(1.0f, 1.0f, 1.0f);
+const vec3 sky_color = vec3(0.05f, 0.05f, 0.2f);
 
 void main()
 {
@@ -31,5 +33,9 @@ void main()
     vec3 specular = specular_strength * spec * light_color;  
         
     vec3 result = (ambient + diffuse + specular) * terrain_color;
+
+    // fog
+    result = mix(sky_color, result, visibility);
+
     FragColor = vec4(result, 1.0);
 };

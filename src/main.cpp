@@ -54,7 +54,7 @@ int main()
     Shader terrain_shader("src/shaders/terrain.vs", "src/shaders/terrain.fs", shader_report);
     shader_report.log_if_bad();
 
-    Terrain terrain(glm::vec3(0.0f), 5.0f, 60, 0.3f, 4, 0.3f);
+    Terrain terrain(glm::vec3(0.0f), 5.0f, 50, 0.3f, 4, 0.3f);
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))
@@ -74,7 +74,7 @@ int main()
 
         processInput(window);
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.05f, 0.05f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 projection_view = camera.get_projection_view_matrix();

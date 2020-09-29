@@ -8,7 +8,7 @@ Trello page [here.](https://trello.com/b/YY2kx12v/reasons)
 
 ### Building and running the program
 
-*make && ./main*
+*make release && ./main*
 
 **Reasons** uses:
 * glm 

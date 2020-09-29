@@ -9,6 +9,7 @@ class Triangle
 {
     static const float vertices[9];
     static unsigned vbo, vao;
+    int ruchanie;
     
 public:
 

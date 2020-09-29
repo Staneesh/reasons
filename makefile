@@ -1,40 +1,49 @@
-OBJ = build/main.o build/glad.o build/shader.o build/utils.o build/camera.o build/triangle.o build/terrain.o
+TARGET_EXEC ?= main
+
+SRC_DIR ?= ./src
+BUILD_DIR ?= ./build
 CXX = clang
 CC = gcc
-LDFLAGS = -ldl -lstdc++ -lglfw
-LDLIBS = -lm
-DEBUGFLAGS = -Wall -Wshadow
 
-all: $(OBJ)
-	$(CXX) $(LDFLAGS) -o main $(OBJ) $(LDLIBS)
+CPP_FLAGS = -MMD -MP -std=c++17 -Wall -Wshadow -Wextra
+DEBUG_FLAGS = $(CPP_FLAGS) -O0 -fsanitize=address
+RELEASE_FLAGS := $(CPP_FLAGS) -O3
+LINK_FLAGS := -ldl -lstdc++ -lglfw -lm
+INCLUDE_FLAGS := -I./include  -I./src
 
-clean: 
-	rm -rf build *.o main
+SRCS := $(shell find $(SRC_DIRS) -name '*.cpp' -or -name '*.c')
+DEBUG_OBJS := $(SRCS:%=$(BUILD_DIR)/debug/%.o)
+DEBUG_DEPS := $(DEBUG_OBJS:.o=.d)
+RELEASE_OBJS := $(SRCS:%=$(BUILD_DIR)/release/%.o)
+RELEASE_DEPS := $(RELEASE_OBJS:.o=.d)
 
-build/main.o: src/main.cpp
-	mkdir -p build
-	$(CXX) -c src/main.cpp -o build/main.o $(DEBUGFLAGS)
+$(BUILD_DIR)/debug/%.cpp.o: %.cpp
+	$(MKDIR_P) $(dir $@)
+	$(CXX) $(DEBUG_FLAGS) $(INCLUDE_FLAGS) -c $< -o $@
 
-build/glad.o: src/glad.c
-	mkdir -p build
-	$(CC) -c src/glad.c -o build/glad.o $(DEBUGFLAGS)
+$(BUILD_DIR)/debug/%.c.o: %.c
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(DEBUG_FLAGS) $(INCLUDE_FLAGS) -c $< -o $@
 
-build/shader.o: src/shader.cpp
-	mkdir -p build
-	$(CXX) -c src/shader.cpp -o build/shader.o $(DEBUGFLAGS)
+$(BUILD_DIR)/release/%.cpp.o: %.cpp
+	$(MKDIR_P) $(dir $@)
+	$(CXX) $(RELEASE_FLAGS) $(INCLUDE_FLAGS) -c $< -o $@
 
-build/utils.o: src/utils.cpp
-	mkdir -p build
-	$(CXX) -c src/utils.cpp -o build/utils.o $(DEBUGFLAGS)
+$(BUILD_DIR)/release/%.c.o: %.c
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(RELEASE_FLAGS) $(INCLUDE_FLAGS) -c $< -o $@
 
-build/camera.o: src/camera.cpp
-	mkdir -p build
-	$(CXX) -c src/camera.cpp -o build/camera.o $(DEBUGFLAGS)
+debug: $(DEBUG_OBJS)
+	$(CXX) $(DEBUG_OBJS) $(DEBUG_FLAGS) $(INCLUDE_FLAGS) $(LINK_FLAGS) -o $(TARGET_EXEC)
 
-build/triangle.o: src/triangle.cpp
-	mkdir -p build
-	$(CXX) -c src/triangle.cpp -o build/triangle.o $(DEBUGFLAGS)
+release: $(RELEASE_OBJS)
+	$(CXX) $(RELEASE_OBJS) $(RELEASE_FLAGS) $(INCLUDE_FLAGS) $(LINK_FLAGS) -o $(TARGET_EXEC)
 
-build/terrain.o: src/terrain.cpp
-	mkdir -p build
-	$(CXX) -c src/terrain.cpp -o build/terrain.o $(DEBUGFLAGS)
+.PHONY: debug
+
+clean:
+	rm -rf $(BUILD_DIR) main
+
+-include $(DEBUG_DEPS) $(RELEASE_DEPS)
+
+MKDIR_P ?= mkdir -p

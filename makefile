@@ -1,2 +1,35 @@
-reasons: src/main.cpp src/glad.c src/shader.cpp src/utils.cpp src/camera.cpp src/triangle.cpp src/terrain.cpp
-	clang -o main -ldl -lstdc++ -lglfw src/main.cpp src/glad.c src/shader.cpp src/utils.cpp src/camera.cpp src/triangle.cpp src/terrain.cpp -lm
+
+OBJ = main.o glad.o shader.o utils.o camera.o triangle.o terrain.o
+CXX = clang
+CC = gcc
+LDFLAGS = -ldl -lstdc++ -lglfw
+LDLIBS = -lm
+
+reasons: $(OBJ)
+	$(CXX) $(LDFLAGS) -o main $(OBJ) $(LDLIBS)
+
+clean: 
+	rm *.o main
+
+main.o: src/main.cpp
+	$(CXX) -c src/main.cpp
+
+glad.o: src/glad.c
+	$(CC) -c src/glad.c
+
+shader.o: src/shader.cpp
+	$(CXX) -c src/shader.cpp
+
+utils.o: src/utils.cpp
+	$(CXX) -c src/utils.cpp
+
+camera.o: src/camera.cpp
+	$(CXX) -c src/camera.cpp
+
+triangle.o: src/triangle.cpp
+	$(CXX) -c src/triangle.cpp
+
+terrain.o: src/terrain.cpp
+	$(CXX) -c src/terrain.cpp
+
+

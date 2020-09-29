@@ -39,6 +39,10 @@ void Terrain::generate_terrain(
 
     for (unsigned z = 0; z < number_of_tiles_per_side + 1; ++z)
     {
+#if 0
+        float terrain_generation_percentage = 100.0f * z/number_of_tiles_per_side;
+        LOG(terrain_generation_percentage);
+#endif
         glm::vec3 current_vertex_position = starting_position + (float)z * dz;
         for (unsigned x = 0; x < number_of_tiles_per_side + 1; ++x)
         {

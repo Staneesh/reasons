@@ -20,7 +20,7 @@ const Utils::Report Utils::load_entire_file(const char* path, unsigned char** wh
     memset(*where, 0, fileSize + 1);
     
     if (fread(*where, fileSize, 1, file) != 1) {
-        return Utils::Report(Utils::Report::Type::ERROR, "Failed reading file!");
+        return Utils::Report(Utils::Report::Type::ERROR, (char*)"Failed reading file!");
     }
     
     fclose(file);

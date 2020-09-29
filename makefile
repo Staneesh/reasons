@@ -1,4 +1,3 @@
-
 OBJ = main.o glad.o shader.o utils.o camera.o triangle.o terrain.o
 CXX = clang
 CC = gcc
@@ -32,5 +31,3 @@ triangle.o: src/triangle.cpp
 
 terrain.o: src/terrain.cpp
 	$(CXX) -c src/terrain.cpp $(DEBUGFLAGS)
-
-

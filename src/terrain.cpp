@@ -239,15 +239,15 @@ float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z)
 }
 
 Terrain::Terrain(
-    const glm::vec3& position,
-    float mesh_size, 
-    unsigned number_of_tiles_per_side,
+    const glm::vec3& position_pass,
+    float mesh_size_pass, 
+    unsigned number_of_tiles_per_side_pass,
     float amplitude_pass,
-    unsigned octaves,
-    float roughness
+    unsigned octaves_pass,
+    float roughness_pass
 )
 {
     seed = rand() % 1000000;
-    generate_terrain(position, mesh_size, number_of_tiles_per_side, 
-    amplitude_pass, octaves, roughness);
+    generate_terrain(position_pass, mesh_size_pass, number_of_tiles_per_side_pass, 
+    amplitude_pass, octaves_pass, roughness_pass);
 }

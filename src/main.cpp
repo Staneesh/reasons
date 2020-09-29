@@ -112,11 +112,15 @@ void processInput(GLFWwindow *window)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    UNUSED(window);
+    
     glViewport(0, 0, width, height);
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    UNUSED(window);
+
     if (camera.first_mouse)
     {
         camera.last_x = xpos;
@@ -135,6 +139,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
+    UNUSED(window);
+    UNUSED(xoffset);
+
     camera.process_mouse_scroll(yoffset, delta_time);
 }
 

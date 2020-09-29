@@ -23,8 +23,8 @@ Camera::Camera(unsigned int screen_width_pass, unsigned int screen_height_pass,
     zoom = default_zoom;
     world_up = up;
     front = vec3(0.0f, 0.0, -1.0f);
-    sensitivity = default_sensitivity;
-    movement_speed = default_speed;
+    sensitivity = sensitivity_pass;
+    movement_speed = speed_pass;
 
 
     first_mouse = true;

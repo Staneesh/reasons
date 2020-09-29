@@ -5,7 +5,6 @@
 #include "utils.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "glm/gtc/random.hpp"
 
 #include <iostream>
 
@@ -32,7 +31,6 @@ class Terrain
     float roughness;
 
     uint64_t xorshift_state;
-    float max_shift;
     unsigned xorshift();
     unsigned terrain_seed;
 

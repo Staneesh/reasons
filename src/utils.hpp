@@ -18,6 +18,9 @@
 					  std::cout<<m[0].z<<", "<<m[1].z<<", "<<m[2].z<<", "<<m[3].z<<std::endl; \
 					  std::cout<<m[0].w<<", "<<m[1].w<<", "<<m[2].w<<", "<<m[3].w<<"\n}"<<std::endl;}
 
+//NOTE(stanisz): disables the 'unused variable' warning 
+#define UNUSED(x) (void)(x)
+
 class Utils
 {
 public:

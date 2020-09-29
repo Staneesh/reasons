@@ -1,33 +1,40 @@
-OBJ = main.o glad.o shader.o utils.o camera.o triangle.o terrain.o
+OBJ = build/main.o build/glad.o build/shader.o build/utils.o build/camera.o build/triangle.o build/terrain.o
 CXX = clang
 CC = gcc
 LDFLAGS = -ldl -lstdc++ -lglfw
 LDLIBS = -lm
 DEBUGFLAGS = -Wall -Wshadow
 
-reasons: $(OBJ)
+all: $(OBJ)
 	$(CXX) $(LDFLAGS) -o main $(OBJ) $(LDLIBS)
 
 clean: 
-	rm *.o main
+	rm -rf build *.o main
 
-main.o: src/main.cpp
-	$(CXX) -c src/main.cpp $(DEBUGFLAGS)
+build/main.o: src/main.cpp
+	mkdir -p build
+	$(CXX) -c src/main.cpp -o build/main.o $(DEBUGFLAGS)
 
-glad.o: src/glad.c
-	$(CC) -c src/glad.c $(DEBUGFLAGS)
+build/glad.o: src/glad.c
+	mkdir -p build
+	$(CC) -c src/glad.c -o build/glad.o $(DEBUGFLAGS)
 
-shader.o: src/shader.cpp
-	$(CXX) -c src/shader.cpp $(DEBUGFLAGS)
+build/shader.o: src/shader.cpp
+	mkdir -p build
+	$(CXX) -c src/shader.cpp -o build/shader.o $(DEBUGFLAGS)
 
-utils.o: src/utils.cpp
-	$(CXX) -c src/utils.cpp $(DEBUGFLAGS)
+build/utils.o: src/utils.cpp
+	mkdir -p build
+	$(CXX) -c src/utils.cpp -o build/utils.o $(DEBUGFLAGS)
 
-camera.o: src/camera.cpp
-	$(CXX) -c src/camera.cpp $(DEBUGFLAGS)
+build/camera.o: src/camera.cpp
+	mkdir -p build
+	$(CXX) -c src/camera.cpp -o build/camera.o $(DEBUGFLAGS)
 
-triangle.o: src/triangle.cpp
-	$(CXX) -c src/triangle.cpp $(DEBUGFLAGS)
+build/triangle.o: src/triangle.cpp
+	mkdir -p build
+	$(CXX) -c src/triangle.cpp -o build/triangle.o $(DEBUGFLAGS)
 
-terrain.o: src/terrain.cpp
-	$(CXX) -c src/terrain.cpp $(DEBUGFLAGS)
+build/terrain.o: src/terrain.cpp
+	mkdir -p build
+	$(CXX) -c src/terrain.cpp -o build/terrain.o $(DEBUGFLAGS)

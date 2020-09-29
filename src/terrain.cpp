@@ -205,9 +205,9 @@ float Terrain::get_height(float x, float z)
 }
 
 
-
+#if 0
 /* The state array must be initialized to not be all zero */
-unsigned Terrain::xorshift()
+unsigned xorshift128()
 {
 	/* Algorithm "xor128" from p. 5 of Marsaglia, "Xorshift RNGs" */
 	unsigned t = xorshift_state.d;
@@ -223,21 +223,25 @@ unsigned Terrain::xorshift()
    
 	return xorshift_state.a;
 }
+#endif
+
+unsigned Terrain::xorshift()
+{
+    uint64_t x = xorshift_state;
+	x ^= x << 13;
+	x ^= x >> 7;
+	x ^= x << 17;
+	return xorshift_state = x;
+}
 
 
 float Terrain::get_noise_zero_one(float x, float z)
 {
-    //unsigned cur_seed = (unsigned)(((unsigned long long)terrain_seed + (unsigned)x * 49632 + (unsigned)z * 325176) % 1000007);
-    //xorshift_state.a = cur_seed;
-    
-    float res = (float)xorshift()/(float)(UINT32_MAX);
-    //LOG(res);
+    unsigned cur_seed = (unsigned)(((unsigned long long)terrain_seed + (unsigned)x * 49632 + (unsigned)z * 325176) % 1000007);
+    xorshift_state = cur_seed;
 
-    //srand(cur_seed);
-    //float res = rand() / (float)RAND_MAX;
+    float res = (float)xorshift()/(float)(UINT32_MAX);
     
-    
-    max_shift = glm::max(res, max_shift);
     return res;
 }
 
@@ -277,12 +281,8 @@ Terrain::Terrain(
 )
 {
     terrain_seed = 1000;
-    xorshift_state = {terrain_seed, terrain_seed, terrain_seed, terrain_seed};
-    max_shift = 0;
- 
+    xorshift_state = terrain_seed;
 
     generate_terrain(position_pass, mesh_size_pass, number_of_tiles_per_side_pass, 
     amplitude_pass, octaves_pass, roughness_pass);
-
-    LOG(max_shift);
 }

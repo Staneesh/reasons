@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "glm/gtc/random.hpp"
 
 #include <iostream>
 
@@ -30,10 +31,7 @@ class Terrain
     unsigned octaves;
     float roughness;
 
-    struct Xorshift_state {
-        unsigned a, b, c, d;
-    };
-    Xorshift_state xorshift_state;
+    uint64_t xorshift_state;
     float max_shift;
     unsigned xorshift();
     unsigned terrain_seed;

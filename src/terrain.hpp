@@ -7,7 +7,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
-#include <random>
 
 class Terrain
 {
@@ -31,7 +30,13 @@ class Terrain
     unsigned octaves;
     float roughness;
 
-    unsigned seed;
+    struct Xorshift_state {
+        uint32_t a, b, c, d;
+    };
+    Xorshift_state xorshift_state;
+    float max_shift;
+    uint32_t xorshift();
+
     float cosine_interpolation(float a, float b, float blend);
     float get_noise_zero_one(unsigned x, unsigned z);
     float get_smooth_noise_zero_one(unsigned x, unsigned z);

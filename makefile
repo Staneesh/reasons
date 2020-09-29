@@ -6,7 +6,7 @@ CXX = clang
 CC = gcc
 
 CPP_FLAGS = -MMD -MP -std=c++17 -Wall -Wshadow -Wextra
-DEBUG_FLAGS = $(CPP_FLAGS) -O0 -fsanitize=address
+DEBUG_FLAGS = $(CPP_FLAGS) -O0 -g
 RELEASE_FLAGS := $(CPP_FLAGS) -O3
 LINK_FLAGS := -ldl -lstdc++ -lglfw -lm
 INCLUDE_FLAGS := -I./include  -I./src

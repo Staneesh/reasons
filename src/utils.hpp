@@ -36,8 +36,8 @@ public:
 		Report(const Report& r);
 		~Report();
 
-		const bool is_bad() const;
-		const bool is_good() const;
+		bool is_bad() const;
+		bool is_good() const;
 
 		void append(const Type& message_type, const std::string& add_to_report);
 		void append(const Report& r);

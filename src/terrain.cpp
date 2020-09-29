@@ -160,8 +160,8 @@ float Terrain::get_interpolated_noise_zero_one(float x, float z)
 {
     int int_x = (int)x;
     int int_z = (int)z;
-    float fract_x = x - int_x;
-    float fract_z = z - int_z;
+    float fract_x = x - (float)int_x;
+    float fract_z = z - (float)int_z;
 
     float v1 = get_smooth_noise_zero_one(int_x, int_z);
     float v2 = get_smooth_noise_zero_one(int_x + 1, int_z);
@@ -174,11 +174,11 @@ float Terrain::get_interpolated_noise_zero_one(float x, float z)
     return cosine_interpolation(i1, i2, fract_z);
 }
 
-float Terrain::get_height(unsigned x, unsigned z) 
+float Terrain::get_height(float x, float z) 
 {
     float result = 0.0f;
 
-    float d = (float)glm::pow(2, octaves - 1);
+    float d = (float)(1<<(octaves-1));
 
     float amp_sum = 0.0f;
     for (unsigned i = 0; i < octaves; ++i)
@@ -189,7 +189,7 @@ float Terrain::get_height(unsigned x, unsigned z)
     float offset = 0.0f;
     for (unsigned i = 0; i < octaves; ++i)
     {
-        float frequency = (float)glm::pow(2, i) / d;
+        float frequency = (float)(1<<i) / d;
         float amp = (float)glm::pow(roughness, i) * amplitude;
 
         
@@ -207,12 +207,12 @@ float Terrain::get_height(unsigned x, unsigned z)
 
 
 /* The state array must be initialized to not be all zero */
-uint32_t Terrain::xorshift()
+unsigned Terrain::xorshift()
 {
 	/* Algorithm "xor128" from p. 5 of Marsaglia, "Xorshift RNGs" */
-	uint32_t t = xorshift_state.d;
+	unsigned t = xorshift_state.d;
 
-	uint32_t const s = xorshift_state.a;
+	unsigned const s = xorshift_state.a;
 	xorshift_state.d = xorshift_state.c;
 	xorshift_state.c = xorshift_state.b;
 	xorshift_state.b = s;
@@ -225,18 +225,23 @@ uint32_t Terrain::xorshift()
 }
 
 
-float Terrain::get_noise_zero_one(unsigned x, unsigned z)
+float Terrain::get_noise_zero_one(float x, float z)
 {
-    unsigned cur_seed = (unsigned)(((unsigned long long)xorshift_state.a + x * 49632 + z * 325176) % 1000007);
-    xorshift_state.a = cur_seed;
+    //unsigned cur_seed = (unsigned)(((unsigned long long)terrain_seed + (unsigned)x * 49632 + (unsigned)z * 325176) % 1000007);
+    //xorshift_state.a = cur_seed;
     
-    float res = (float)xorshift()/(float)(2531139085);
-    max_shift = glm::max(res, max_shift);
+    float res = (float)xorshift()/(float)(UINT32_MAX);
     //LOG(res);
+
+    //srand(cur_seed);
+    //float res = rand() / (float)RAND_MAX;
+    
+    
+    max_shift = glm::max(res, max_shift);
     return res;
 }
 
-float Terrain::get_smooth_noise_zero_one(unsigned x, unsigned z) 
+float Terrain::get_smooth_noise_zero_one(float x, float z) 
 {
     float sides = 
     get_noise_zero_one(x + 1, z) + 
@@ -271,8 +276,10 @@ Terrain::Terrain(
     float roughness_pass
 )
 {
-    xorshift_state = {12313124, 894576, 1231566, 67125237};
+    terrain_seed = 1000;
+    xorshift_state = {terrain_seed, terrain_seed, terrain_seed, terrain_seed};
     max_shift = 0;
+ 
 
     generate_terrain(position_pass, mesh_size_pass, number_of_tiles_per_side_pass, 
     amplitude_pass, octaves_pass, roughness_pass);

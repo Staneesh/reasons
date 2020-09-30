@@ -76,16 +76,28 @@ void Terrain::generate_terrain(
 
     generate_normals();
 
+#if 0
+    u32 elems = 0;
+    glm::uvec3* a;
+    for(a = triangle_indices; elems < number_of_triangles; ++a)
+    {
+        ++elems;
+    }
+    LOG(elems);
+    LOG(a - triangle_indices);
+    LOG(number_of_triangles);
+#endif
+
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ebo);
-
+#if 1
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, number_of_vertices * sizeof(glm::vec3), vertex_positions, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, number_of_triangles * sizeof(glm::dvec3) , triangle_indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, number_of_triangles * sizeof(glm::uvec3) , triangle_indices, GL_STATIC_DRAW);
     
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0); 
@@ -98,6 +110,27 @@ void Terrain::generate_terrain(
 
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
     glBindVertexArray(0); 
+#else
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+
+    u32 pos_size = number_of_vertices * sizeof(glm::vec3), tri_size =  number_of_triangles * sizeof(glm::dvec3);
+    
+    glBufferSubData(GL_ARRAY_BUFFER, 0, pos_size, &vertex_positions);
+    glBufferSubData(GL_ARRAY_BUFFER, pos_size, pos_size, &normals);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri_size, &triangle_indices, GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::dvec3), (void*)(pos_size));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    glBindVertexArray(0); 
+#endif
 }
 
 void Terrain::generate_normals()

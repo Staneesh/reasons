@@ -105,3 +105,33 @@ void Utils::Report::clear()
 {
     message = "";
 }
+
+void Utils::TimedBlock::begin()
+{
+    timespec current_time;
+    clock_gettime(CLOCK_MONOTONIC, &current_time);
+    time_at_the_start = (u64)1e9 * current_time.tv_sec + current_time.tv_nsec;
+    cycles_at_the_start = __rdtsc();
+}
+
+Utils::TimedBlock::TimedBlock(const std::string& name_pass)
+{
+    name = name_pass;
+    begin();
+}
+
+void Utils::TimedBlock::end()
+{
+    timespec current_time;
+    clock_gettime(CLOCK_MONOTONIC, &current_time);
+    u64 this_time = (u64)1e9 * current_time.tv_sec + current_time.tv_nsec;
+    u64 time_elapsed = this_time - time_at_the_start;
+    u64 cycles_elapsed = __rdtsc() - cycles_at_the_start;
+
+    std::cout<<"Block '"<<name<<"' says: \n\tTime elapsed = "<<time_elapsed<<" ms\n\tCycles elapsed = "<<cycles_elapsed<<std::endl;
+}
+
+Utils::TimedBlock::~TimedBlock()
+{
+    end();
+}

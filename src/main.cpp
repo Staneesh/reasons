@@ -23,8 +23,6 @@ Camera camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0f, 0.5f, 0.0f));
 
 int main()
 {
-    LOG(__rdtsc());
-
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -56,7 +54,7 @@ int main()
     Shader terrain_shader("src/shaders/terrain.vs", "src/shaders/terrain.fs", shader_report);
     shader_report.log_if_bad();
 
-    Terrain terrain(glm::vec3(0.0f), 5.0f, 50, 0.3f, 3, 0.3f);
+    Terrain terrain(glm::vec3(0.0f), 5.0f, 100, 0.3f, 3, 0.3f);
 
     unsigned frame_count_to_show_debug_time = 0;
     while (!glfwWindowShouldClose(window))
@@ -113,7 +111,7 @@ void processInput(GLFWwindow *window)
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     UNUSED(window);
-    
+
     glViewport(0, 0, width, height);
 }
 

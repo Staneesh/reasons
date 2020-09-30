@@ -280,6 +280,8 @@ Terrain::Terrain(
     float roughness_pass
 )
 {
+    BEGIN_TIMED_BLOCK("Terrain generation");
+
     terrain_seed = 1000;
     xorshift_state = terrain_seed;
 

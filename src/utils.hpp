@@ -10,7 +10,7 @@
 
 #define LOG(x)       {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#x<<" = "<<x<<std::endl;}
 #define LOG_STRING(x){std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<x<<std::endl;}
-#define LOG_HERE()   {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: HERE!"<<std::endl;}
+#define LOG_HERE     {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: HERE!"<<std::endl;}
 #define LOG_VEC(v)   {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#v<<" = {"<<v.x<<", "<<v.y<<", "<<v.z<<"}"<<std::endl;}
 #define LOG_VEC4(v)  {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#v<<" = {"<<v.x<<", "<<v.y<<", "<<v.z<<", "<<v.w<<"}"<<std::endl;}
 #define LOG_MAT4(m)  {std::cout<<"Line "<<__LINE__<<" in file "<<__FILE__<<" says: "<<#m<<" = {\n"<<m[0].x<<", "<<m[1].x<<", "<<m[2].x<<", "<<m[3].x<<std::endl; \
@@ -20,6 +20,17 @@
 
 //NOTE(stanisz): disables the 'unused variable' warning 
 #define UNUSED(x) (void)(x)
+
+#define BEGIN_TIMED_BLOCK(block_name) {Utils::TimedBlock timed_block_name((std::string)block_name); UNUSED(timed_block_name);}
+
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+typedef int8_t i8;
+typedef int16_t i16;
+typedef int32_t i32;
+typedef int64_t i64;
 
 class Utils
 {
@@ -99,6 +110,20 @@ public:
 		Ok_type ok;
 		Err_type err;
 		Type type;
+	};
+
+	class TimedBlock
+	{
+		u64 cycles_at_the_start;
+		//NOTE(stanisz): nanoseconds
+		u64 time_at_the_start;
+		std::string name;
+
+		void begin();
+		void end();
+	public:
+		TimedBlock(const std::string& name);
+		~TimedBlock();
 	};
 
 	static const Report load_entire_file(const char* path, unsigned char** where);

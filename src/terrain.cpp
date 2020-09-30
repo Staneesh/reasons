@@ -13,6 +13,19 @@ void Terrain::generate_terrain(
     unsigned octaves_pass,
     float roughness_pass)
 {   
+    /*NOTE(stanisz): Singlethreading, after introcuding xorshift, no SIMD, release build:
+    Terrain terrain(glm::vec3(0.0f), 50.0f, 500, 0.3f, 3, 0.3f):
+      Time elapsed = 139981361 ms = 0.139981 s
+	  Cycles elapsed = 561038661 C = 0.561039 GC
+    
+    Terrain terrain(glm::vec3(0.0f), 50.0f, 1000, 0.3f, 3, 0.3f):
+      Time elapsed = 536471216 ms = 0.536471 s
+	  Cycles elapsed = 2150151259 C = 2.15015 GC
+    
+    Terrain terrain(glm::vec3(0.0f), 50.0f, 2000, 0.3f, 3, 0.3f);
+      Time elapsed = 2003119493 ms = 2.00312 s
+	  Cycles elapsed = 8028408309 C = 8.02841 GC
+    */
     BEGIN_TIMED_BLOCK("Terrain generation");
 
     roughness = roughness_pass;
@@ -39,12 +52,15 @@ void Terrain::generate_terrain(
     unsigned indices_array_index = 0;
     unsigned vertex_array_index = 0; 
 
+#if 0
+    while (job_to_do)
+    {
+        do_job();
+    }
+#endif 
+
     for (unsigned z = 0; z < number_of_tiles_per_side + 1; ++z)
     {
-#if 0
-        float terrain_generation_percentage = 100.0f * z/number_of_tiles_per_side;
-        LOG(terrain_generation_percentage);
-#endif
         glm::vec3 current_vertex_position = starting_position + (float)z * dz;
         for (unsigned x = 0; x < number_of_tiles_per_side + 1; ++x)
         {

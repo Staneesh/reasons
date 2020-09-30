@@ -20,7 +20,9 @@ class Terrain
     // adjacent faces.
     glm::vec3* normals;
 
-    unsigned vbo, vao, ebo, normal_vbo;
+    unsigned vbo, vao, ebo;
+    //TODO(stanisz): replace glBufferData with glBufferSubdata in order to use only 1 vbo.
+    unsigned normal_vbo; 
     float mesh_size;
     float tile_size;
     //NOTE(stanisz): position of the center of the terrain mesh in world coords.

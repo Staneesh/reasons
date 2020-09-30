@@ -128,7 +128,9 @@ void Utils::TimedBlock::end()
     u64 time_elapsed = this_time - time_at_the_start;
     u64 cycles_elapsed = __rdtsc() - cycles_at_the_start;
 
-    std::cout<<"Block '"<<name<<"' says: \n\tTime elapsed = "<<time_elapsed<<" ms\n\tCycles elapsed = "<<cycles_elapsed<<std::endl;
+    std::cout<<"Block '"<<name<<"' says: \n\tTime elapsed = "<<time_elapsed<<" ms = "<<\
+    (double)time_elapsed / 1e9<<" s\n\tCycles elapsed = "<<cycles_elapsed<<" C = "<<\
+    (double)cycles_elapsed / 1e9<<" GC"<<std::endl;
 }
 
 Utils::TimedBlock::~TimedBlock()

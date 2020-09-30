@@ -13,6 +13,8 @@ void Terrain::generate_terrain(
     unsigned octaves_pass,
     float roughness_pass)
 {   
+    BEGIN_TIMED_BLOCK("Terrain generation");
+
     roughness = roughness_pass;
     octaves = octaves_pass;
     amplitude = amplitude_pass;
@@ -239,9 +241,8 @@ float Terrain::get_noise_zero_one(float x, float z)
 {
     unsigned cur_seed = (unsigned)(((unsigned long long)terrain_seed + (unsigned)x * 49632 + (unsigned)z * 325176) % 1000007);
     xorshift_state = cur_seed;
-
-    float res = (float)xorshift()/(float)(UINT32_MAX);
-    
+   
+    float res = (float)xorshift()/(float)(UINT32_MAX); 
     return res;
 }
 
@@ -280,8 +281,6 @@ Terrain::Terrain(
     float roughness_pass
 )
 {
-    BEGIN_TIMED_BLOCK("Terrain generation");
-
     terrain_seed = 1000;
     xorshift_state = terrain_seed;
 

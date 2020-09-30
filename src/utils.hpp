@@ -21,7 +21,7 @@
 //NOTE(stanisz): disables the 'unused variable' warning 
 #define UNUSED(x) (void)(x)
 
-#define BEGIN_TIMED_BLOCK(block_name) {Utils::TimedBlock timed_block_name((std::string)block_name); UNUSED(timed_block_name);}
+#define BEGIN_TIMED_BLOCK(block_name) Utils::TimedBlock timed_block_name##__LINE__((std::string)block_name);
 
 typedef uint8_t u8;
 typedef uint16_t u16;

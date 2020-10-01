@@ -44,6 +44,14 @@ class Terrain
 
     void generate_normals();
 
+    //NOTE(stanisz): a strip of land
+    struct TerrainGenerationJobData
+    {
+        unsigned z_start, z_end;
+        unsigned tiles_per_side;
+    };
+    void terrain_generation_job(const TerrainGenerationJobData& d, 
+        glm::vec3* vertex_positions);
     void generate_terrain(
         const glm::vec3& position,
         float mesh_size, 

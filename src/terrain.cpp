@@ -5,6 +5,50 @@ Terrain::Terrain()
     LOG_STRING("Please provide arguments for construction of Terrain struct."); assert(0==1);
 }
 
+
+void Terrain::terrain_generation_job(
+    const TerrainGenerationJobData& d,
+    glm::vec3* vertex_positions_og)
+{
+    const glm::vec3 starting_position = glm::vec3(
+        position.x - mesh_size / 2,
+        position.y, 
+        position.z - mesh_size / 2);
+
+    const glm::vec3 dz = glm::vec3(0.0f, 0.0f, tile_size);
+    const glm::vec3 dx = glm::vec3(tile_size, 0.0f, 0.0f);
+
+    const u32 delta_z = d.z_end - d.z_start + 1;
+
+    glm::vec3* this_vertex_positions = 
+     (glm::vec3*)malloc(
+         delta_z * (d.tiles_per_side + 1) * 
+         sizeof(glm::vec3)
+         );
+
+    glm::vec3* this_vertex = this_vertex_positions;
+    for (u32 z = d.z_start; z < d.z_end; ++z)
+    {
+        glm::vec3 current_vertex_position = starting_position + (float)z * dz;
+        
+        for (u32 x = 0; x < d.tiles_per_side + 1; ++x)
+        {
+            current_vertex_position.y = get_height(x, z);
+            *this_vertex = current_vertex_position;
+
+            ++this_vertex;
+            current_vertex_position += dx;
+        }
+    }
+
+    //BLOCKHERE
+    memcpy(vertex_positions_og + d.z_start * (d.tiles_per_side + 1),
+        this_vertex_positions,
+        delta_z * (d.tiles_per_side + 1));
+
+    free(this_vertex_positions);
+}
+
 void Terrain::generate_terrain(
     const glm::vec3& position_pass, 
     float mesh_size_pass, 

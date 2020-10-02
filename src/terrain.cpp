@@ -288,22 +288,13 @@ unsigned xorshift128()
 }
 #endif
 
-unsigned Terrain::xorshift()
-{
-    uint64_t x = xorshift_state;
-	x ^= x << 13;
-	x ^= x >> 7;
-	x ^= x << 17;
-	return xorshift_state = x;
-}
-
 
 float Terrain::get_noise_zero_one(float x, float z)
 {
     unsigned cur_seed = (unsigned)(((unsigned long long)terrain_seed + (unsigned)x * 49632 + (unsigned)z * 325176) % 1000007);
     xorshift_state = cur_seed;
    
-    float res = (float)xorshift()/(float)(UINT32_MAX); 
+    float res = (float)Utils::xorshift(&xorshift_state)/(float)(UINT32_MAX); 
     return res;
 }
 

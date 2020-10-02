@@ -127,6 +127,7 @@ public:
 	};
 
 	static const Report load_entire_file(const char* path, unsigned char** where);
+	static u32 xorshift(u32* s);
 };
 
 #endif

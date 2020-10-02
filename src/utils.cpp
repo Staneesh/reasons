@@ -137,3 +137,12 @@ Utils::TimedBlock::~TimedBlock()
 {
     end();
 }
+
+u32 Utils::xorshift(u32* s)
+{
+    u64 x = (u64)*s;
+	x ^= x << 13;
+	x ^= x >> 7;
+	x ^= x << 17;
+	return *s = x;
+}

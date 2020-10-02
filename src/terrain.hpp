@@ -32,8 +32,7 @@ class Terrain
     unsigned octaves;
     float roughness;
 
-    uint64_t xorshift_state;
-    unsigned xorshift();
+    u32 xorshift_state;
     unsigned terrain_seed;
 
     float cosine_interpolation(float a, float b, float blend);
